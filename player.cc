@@ -101,17 +101,30 @@ bool Player::on_the_road(int vertex_number, Board board){
 }
 
 // set up the initial basement
-// status:
-bool Player::add_initial_basement(int vertex_number){
+// status: 
+bool Player::add_initial_basement(int vertex_number, Board board){
     // check availability
 
     // check if adjacent vertex has residence
+    for(Vertex item : board.getVertices()){
+        if (item.getNumber() == vertex_number){
+            if(item.is_there_building() == false && item.checkResidence() == false){
+                buildings.push_back(Building(vertex_number, this->colour, BuildingType::Basement));
+                // print out message of the build
+                std::cout << stringColour() << " has built: \n";
+                std::cout << vertex_number << " " << stringBuilding(BuildingType::Basement) << "\n";
 
-    buildings.push_back(Building(vertex_number, this->colour, BuildingType::Basement));
-    // print out message of the build
-    std::cout << stringColour() << " has built: \n";
-    std::cout << vertex_number << " " << stringBuilding(BuildingType::Basement) << "\n";
-    return true;
+                // check resources of neighbouring tiles and add these to the player
+
+                return true;
+            } else{
+                std::cout << "You cannot build here.\n";
+                return false;
+            }
+        }
+    }
+    std::cout << "You cannot build here.\n";
+    return false;
 }
 
 // building a residence at the given vertex point
