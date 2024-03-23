@@ -5,8 +5,8 @@
 using namespace std;
 
 enum class Resource {BRICK, ENERGY, GLASS, HEAT, WIFI};
-enum class Colour {Blue, Red, Orange, Yellow};
-enum class BuildingType{Basement, House, Tower};
+enum class Colour {Blue, Red, Orange, Yellow, None};
+enum class BuildingType{Basement, House, Tower, None};
 
 // 1 instance
 class Board {
@@ -43,40 +43,51 @@ public:
 class Edge {
 private:
 	int edge_number; // could be redundant
-	Road* road; //
+	Colour colour;
+	bool road_exist;
 	vector<Tile> neighbouring_tiles;
 	vector<Edge> neighbouring_edges;
 	vector<Vertex> neighbouring_vertices;	
 public:
-	Edge();
+	Edge(int edge_number, Colour colour);
 	~Edge();
-	bool checkNeighbours();
+	int getEdge(){return edge_number;}
+	bool can_i_build(){
+
+	}
 };
 
 // 54 instances
 class Vertex {
 private:
 	int vertex_number; // could be redundant
-	Building building;
+	BuildingType building;
+	Colour colour;
 	bool building_exist;
 	vector<Tile> neighbouring_tiles; 
 	vector<Edge> neighbouring_edges;
 	vector<Vertex> neighbouring_vertices;
 public:
-	Vertex();
+	Vertex(int vertex_number, BuildingType building, Colour colour);
 	~Vertex();
-	int getNumber(){return vertex_number;}
-	bool is_there_building(){
-		return building_exist;
-	}
+	int getVertex(){return vertex_number;}
+	bool is_there_building(){return building_exist;}
+	void upgrade();
+	BuildingType getType(){return building;}
 	// returns true of the neighbours have residence, then building cannot be built here
-	bool checkResidence(){
+	bool can_i_build(Colour cur_colour){
+		if (is_there_building() == true){
+			return true;
+		}
 		for (Vertex item : neighbouring_vertices){
 			if (item.is_there_building() == true){
 				return true;
 			} else {
 				return false;
 			}
+		}
+		for (Edge item: neighbouring_edges){
+			if (item.)
 		}
 	};
 };
@@ -91,8 +102,8 @@ private:
 	int glass;
 	int heat;
 	int wifi;
-	vector<Building> buildings;
-	vector<Road> roads;
+	vector<Vertex> buildings;
+	vector<Edge> roads;
 public:
 	Player(Colour colour);
 	~Player();
@@ -111,34 +122,7 @@ public:
 	bool request_trade(Colour colour, Resource give, Resource take); // true if trade agreed, false if declined
 	void resolve_trade(Colour colour, Resource give, Resource take); // called if trade agreed
 	bool place_geese(); // if trying to place geese at invalid location, call it again to make the player try again};
-};
-
-// 1 instance for each instance of vertex
-class Building {
-private:
-	int vertex_number;
-	Colour colour; // Colour::None if road isn't built. 
-	BuildingType building_type;
-public:
-	Building(int vertex_num, Colour colour, BuildingType type);
-	~Building();
-
-	int getVertex();
-	BuildingType getType();
-	// upgrade the building: basement -> house, house -> tower
-	void upgrade();
-};
-
-// 1 instance for each instance of edge
-class Road {
-private:
-	int edge_number;
-	vector<Edge> neighbouring_edges;
-	vector<Vertex> neighbouring_vertices;
-	Colour colour; // Colour::None if road isn't built. 
-public:
-	Road(int edge_num, Colour colour);
-	bool check_neighbours(){}
+	void save_player_data(std::string filename); // output the player data to the document to save file
 };
 
 // 1. load the board - ie read from files

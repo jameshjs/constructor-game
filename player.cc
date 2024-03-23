@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string>
+#include <fstream>
 #include "player.h"
 
 // constructor
@@ -49,7 +51,7 @@ void Player::print_resources(){
 // status: done
 void Player::print_residences(){
     // iterate through the list of buildings
-    for (Building item : buildings){
+    for (Vertex item : buildings){
         // print out if it is a basement
         if(item.getType() == BuildingType::Basement) 
             std::cout << "Basement: " << item.getVertex() << std::endl;
@@ -107,9 +109,9 @@ bool Player::add_initial_basement(int vertex_number, Board board){
 
     // check if adjacent vertex has residence
     for(Vertex item : board.getVertices()){
-        if (item.getNumber() == vertex_number){
-            if(item.is_there_building() == false && item.checkResidence() == false){
-                buildings.push_back(Building(vertex_number, this->colour, BuildingType::Basement));
+        if (item.getVertex() == vertex_number){
+            if(item.is_there_building() == false && item.can_i_build(colour) == false){
+                buildings.push_back(Vertex(vertex_number, BuildingType::Basement, colour));
                 // print out message of the build
                 std::cout << stringColour() << " has built: \n";
                 std::cout << vertex_number << " " << stringBuilding(BuildingType::Basement) << "\n";
@@ -130,7 +132,7 @@ bool Player::add_initial_basement(int vertex_number, Board board){
 // building a residence at the given vertex point
 // active_player attempts to build residence at vertex_number, returns true if succeeds and returns false if fails
 // status:
-bool Player::build_residence(int vertex_number){
+bool Player::build_residence(int vertex_number, Board board){
     // building basement
     // check availability
 
@@ -145,7 +147,7 @@ bool Player::build_residence(int vertex_number){
         glass --;
         wifi --;
         // add the new basement to the buildigns list
-        buildings.push_back(Building(vertex_number, this->colour, BuildingType::Basement));
+        buildings.push_back(Vertex(vertex_number, BuildingType::Basement, colour));
         // print out message of the build
         std::cout << stringColour() << " has built: \n";
         std::cout << vertex_number << " " << stringBuilding(BuildingType::Basement) << "\n";
@@ -162,7 +164,7 @@ bool Player::build_residence(int vertex_number){
 // improve the building at given vertext point
 // status: done
 bool Player::improve_building(int vertex_number){
-    for (Building item : buildings){
+    for (Vertex item : buildings){
         if(item.getVertex() == vertex_number){
             // potentially upgrade if it is a basement
             if(item.getType() == BuildingType::Basement){
@@ -223,13 +225,13 @@ bool Player::improve_building(int vertex_number){
 
 // build a road at a given edge number
 // status:
-bool Player::build_road(int edge_number){
+bool Player::build_road(int edge_number, Board board){
     // check availability
 
     //if there's adjacent road
     //if there's adjacent residence
 
-    roads.push_back(Road(edge_number, this->colour));
+    roads.push_back(Edge(edge_number, colour));
 
     std::cout << "You do not have enough resrouces.\n";
 }
@@ -254,3 +256,32 @@ void Player::resolve_trade(Colour colour, Resource give, Resource take){
 bool Player::place_geese(){
 
 }
+
+// output the player data to the document to save file
+// status: done
+void Player::save_player_data(std::string filename) {
+    // Open a file for writing
+    std::ofstream outputFile(filename);
+    // output the resources to be saved
+    outputFile<<" "<<brick<<" "<<energy<<" "<<glass<<" "<<heat<<" "<<wifi<<" ";
+    // output the roads to be saved
+    outputFile << "r";
+    for (Edge item : roads){
+        outputFile << " " << item.getEdge();
+    }
+    // output the buildings to be saved
+    outputFile << " h ";
+    for (Vertex item : buildings){
+        // print out if it is a basement
+        if(item.getType() == BuildingType::Basement) 
+            outputFile << item.getVertex() << " B ";
+        // print out if it is a house
+        if(item.getType() == BuildingType::House)
+            outputFile << item.getVertex() << " T ";
+        // print out if it is a tower
+        if(item.getType() == BuildingType::Tower)
+            outputFile << item.getVertex() << " H ";
+    }
+    outputFile << "\n";
+}
+

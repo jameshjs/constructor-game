@@ -12,8 +12,8 @@ private:
 	int glass;
 	int heat;
 	int wifi;
-	std::vector<Building> buildings;
-	std::vector<Road> roads;
+	std::vector<Vertex> buildings;
+	std::vector<Edge> roads;
 public:
 	Player(Colour colour);
 	~Player();
@@ -39,5 +39,7 @@ public:
 	bool request_trade(Colour colour, Resource give, Resource take); // true if trade agreed, false if declined
 	void resolve_trade(Colour colour, Resource give, Resource take); // called if trade agreed
 	bool place_geese(); // if trying to place geese at invalid location, call it again to make the player try again
+
+	void save_player_data(std::string filename); // output the player data to the document to save file
 };
 
