@@ -1,18 +1,28 @@
+#include <vector>
+#include <iostream>
+#include <string>
+
 using namespace std;
 
-enum class Resource {BRICK, ENERGY, GLASS, HEAT, WIFI}
-enum class Colour {Blue, Red, Orange, Yellow}
+enum class Resource {BRICK, ENERGY, GLASS, HEAT, WIFI};
+enum class Colour {Blue, Red, Orange, Yellow};
+enum class BuildingType{Basement, House, Tower};
 
 // 1 instance
 class Board {
+private:
 	vector<Tile> tiles; // 19 tiles in the vector, one for each on the map
 	vector<Edge> edges; // 72 edges
 	vector<Vertex> vertices; // 54 vertices
+public:
+	Board();
+	~Board();
 	void print();
-}
+};
 
 // 19 instances
 class Tile {
+private:
 	int tile_number; // could be redundant
 	int tile_value; // winning number for dice roll
 	bool geese;
@@ -20,30 +30,43 @@ class Tile {
 	// don't think these are needed
 	// vector<Edge*> neighbouring_edges; 
 	// vector<Vertex*> neighbouring_vertices;
-
-}
+public:
+	Tile();
+	~Tile();
+};
 
 // 72 instances
 class Edge {
+private:
 	int edge_number; // could be redundant
 	Road* road; //
 	vector<int> neighbouring_tiles;
-	vector<int> neighbouring_vertices;
-	
-}
+	vector<int> neighbouring_vertices;	
+public:
+	Edge();
+	~Edge();
+	bool checkNeighbours();
+};
 
 // 54 instances
 class Vertex {
+private:
 	int vertex_number; // could be redundant
 	Building* building;
 	vector<int> neighbouring_tiles; 
 	vector<int> neighbouring_edges; 
-}
+public:
+	Vertex();
+	~Vertex();
+	// returns true of the neighbours have houses, then building cannot be built here
+	bool checkNeighbours();
+};
 
 // 4 instances, one for each player
 class Player {
+private:
 	Colour colour; // player colour, cannot be Colour::None
-	int building_points // current number of building points
+	int building_points; // current number of building points
 	int brick; // number of bricks the player currently has
 	int energy; // number of energies the player currently has
 	int glass;
@@ -51,23 +74,45 @@ class Player {
 	int wifi;
 	vector<Building> buildings;
 	vector<Road> roads;
-	void print();
+public:
+	Player();
+	~Player();
+
+	std::string printColour();
+	void print_resources();
 	void print_residences();
-}
+	bool build_residence(int vertex_number); // active_player attempts to build residence at vertex_number, returns true if succeeds and returns false if fails
+	bool improve_building(int vertex_number);
+	bool build_road(int edge_number);
+	bool request_trade(Colour colour, Resource give, Resource take); // true if trade agreed, false if declined
+	void resolve_trade(Colour colour, Resource give, Resource take); // called if trade agreed
+	bool place_geese(); // if trying to place geese at invalid location, call it again to make the player try again
+};
 
 // 1 instance for each instance of vertex
 class Building {
-	enum class BuildingType{Basement, House, Tower};
+private:
 	int vertex_number;
 	Colour colour; // Colour::None if road isn't built. 
 	BuildingType building_type;
-}
+public:
+	Building(int vertex_num, Colour colour, BuildingType type);
+	~Building();
+
+	int getVertex();
+	BuildingType getType();
+	// upgrade the building: basement -> house, house -> tower
+	void upgrade();
+};
 
 // 1 instance for each instance of edge
 class Road {
+private:
 	int edge_number;
 	Colour colour; // Colour::None if road isn't built. 
-}
+public:
+	Road(int edge_num, Colour colour);
+};
 
 // 1. load the board - ie read from files
 // 2. play the turn
@@ -79,44 +124,38 @@ class Game {
 	vector<Player> players;
 	Colour active_player; // the colour of the player to make moves
 	bool dice_is_fair();
-	Game(...); // constructor calls load_board() or random_board()
+	Game(/*...*/); // constructor calls load_board() or random_board()
 	void new_game(); // calls load_board() or random_board()
 	void load_board(string filename);
 	void random_board();
 	void load_game(string filename);
 	
-	bool build_residence(int vertex_number); // active_player attempts to build residence at vertex_number, returns true if succeeds and returns false if fails
-	bool improve_building(int vertex_number);
-	bool build_road(int edge_number);
 	void set_dice_to_fair(); // can be called at beginning of turn
 	void set_dice_to_loaded(); // can be called at beginning of turn
 	int roll_dice(); // can be called at beginning of turn
 	void distribute_resource(int dice_roll); // called after dice is rolled, give players resources
-	bool place_geese(); // if trying to place geese at invalid location, call it again to make the player try again
 	void steal(Colour colour); // called after geese is placed
-	bool request_trade(Colour colour, Resource give, Resource take); // true if trade agreed, false if declined
-	void resolve_trade(Colour colour, Resource give, Resource take); // called if trade agreed
 	void board(); // prints the board
 	void status(); // prints status of all builders
 	void next(); // pass turn
 	void save(string filename); // save game to file
 	void help(); // print list of commands
 	void run(); // infinite loop that runs, asking for player to move
-}
+};
 
 class wrapper {
 	void init_game();
 	void play_turn();
 	void help();
 	void save();
-}
+};
 
 int main() {
 	while(true) {
-		Game game = Game{...};
+		Game game = Game(/*...*/);
 		game.run();
-		cout << Would you like to play again? << endl;
-		...
+		cout << "Would you like to play again?" << endl;
+		//...
 		// if yes, call constructor on game and run() again, else break and end program
 	}
-}
+};
