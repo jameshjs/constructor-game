@@ -1,7 +1,7 @@
 using namespace std;
 
 enum class Resource {BRICK, ENERGY, GLASS, HEAT, WIFI}
-enum class Colour {Blue, Red, Orange, Yellow, None}
+enum class Colour {Blue, Red, Orange, Yellow}
 
 // 1 instance
 class Board {
@@ -26,18 +26,18 @@ class Tile {
 // 72 instances
 class Edge {
 	int edge_number; // could be redundant
-	Road road; //
-	vector<Tile*> neighbouring_tiles; 
-	vector<Vertex*> neighbouring_vertices;
+	Road* road; //
+	vector<int> neighbouring_tiles;
+	vector<int> neighbouring_vertices;
 	
 }
 
 // 54 instances
 class Vertex {
 	int vertex_number; // could be redundant
-	Building building;
-	vector<Tile*> neighbouring_tiles; 
-	vector<Edge*> neighbouring_edges; 
+	Building* building;
+	vector<int> neighbouring_tiles; 
+	vector<int> neighbouring_edges; 
 }
 
 // 4 instances, one for each player
@@ -49,15 +49,15 @@ class Player {
 	int glass;
 	int heat;
 	int wifi;
-	vector<Building*> buildings; 
-	vector<Road*> roads; 
+	vector<Building> buildings;
+	vector<Road> roads;
 	void print();
 	void print_residences();
 }
 
 // 1 instance for each instance of vertex
 class Building {
-	enum class BuildingType{None, Basement, House, Tower};
+	enum class BuildingType{Basement, House, Tower};
 	int vertex_number;
 	Colour colour; // Colour::None if road isn't built. 
 	BuildingType building_type;
@@ -69,6 +69,10 @@ class Road {
 	Colour colour; // Colour::None if road isn't built. 
 }
 
+// 1. load the board - ie read from files
+// 2. play the turn
+// 3. keep track of who wins, start new game, etc
+// 4. display the board
 // 1 instance. creates the game and runs the loop. if a player wins, end the loop
 class Game {
 	Board board;
@@ -100,6 +104,13 @@ class Game {
 	void run(); // infinite loop that runs, asking for player to move
 }
 
+class wrapper {
+	void init_game();
+	void play_turn();
+	void help();
+	void save();
+}
+
 int main() {
 	while(true) {
 		Game game = Game{...};
@@ -109,5 +120,3 @@ int main() {
 		// if yes, call constructor on game and run() again, else break and end program
 	}
 }
-
-
