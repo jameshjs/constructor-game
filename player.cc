@@ -10,32 +10,16 @@ Player::Player(Colour colour):
 // destroyer
 Player::~Player(){}
 
-// returns the colour of the player in string
-// status: done
-std::string Player::stringColour(){
-    if(colour == Colour::Blue) return "blue";
-    else if(colour == Colour::Red) return "red";
-    else if(colour == Colour::Orange) return "orange";
-    else if(colour == Colour::Yellow) return "yellow";
-}
+Colour Player::getColour(){return colour;}
+int Player::getBrick(){return brick;}
+int Player::getEnergy(){return energy;}
+int Player::getGlass(){return glass;}
+int Player::getHeat(){return heat;}
+int Player::getWifi(){return wifi;}
+std::vector<int> Player::getBuildings(){return buildings;}
+std::vector<int> Player::getRoads(){return roads;}
 
-// returns the colour of the player in string
-// status: done
-std::string Player::stringResource(Resource res){
-    if(res == Resource::BRICK) return "brick";
-    else if(res == Resource::ENERGY) return "energy";
-    else if(res == Resource::GLASS) return "glass";
-    else if(res == Resource::HEAT) return "heat";
-    else if(res == Resource::WIFI) return "wifi";
-}
-
-// returns the building of the player in string
-// status: done
-std::string Player::stringBuilding(BuildingType bui){
-    if(bui == BuildingType::Basement) return "basement";
-    else if(bui == BuildingType::House) return "house";
-    else if(bui == BuildingType::Tower) return "tower";
-}
+void Player::changeBuildingPoint(int num){building_points+=num;}
 
 // print the resources that the current player has
 // status: done
@@ -51,16 +35,16 @@ void Player::print_resources(){
 // status: done
 void Player::print_residences(){
     // iterate through the list of buildings
-    for (Vertex item : buildings){
+    for (int item : buildings){
         // print out if it is a basement
         if(item.getType() == BuildingType::Basement) 
-            std::cout << "Basement: " << item.getVertex() << std::endl;
+            std::cout << "Basement: " << item << std::endl;
         // print out if it is a house
         if(item.getType() == BuildingType::House)
-            std::cout << "House: " << item.getVertex() << std::endl;
+            std::cout << "House: " << item << std::endl;
         // print out if it is a tower
         if(item.getType() == BuildingType::Tower)
-            std::cout << "Tower: " << item.getVertex() << std::endl;
+            std::cout << "Tower: " << item << std::endl;
     }
 }
 
@@ -72,13 +56,13 @@ void Player::add_resource(Resource type, int num){
     if (type == Resource::GLASS) glass+=num;
     if (type == Resource::HEAT) heat+=num;
     if (type == Resource::WIFI) wifi+=num;
-    std::cout << "Builder " << stringColour() << " gained: \n";
-    std::cout << num << " " << stringResource(type) << std::endl;
+    std::cout << "Builder " << print_colour(colour) << " gained: "<< std::endl;
+    std::cout << num << " " << print_resource(type) << std::endl;
 }
 
 // removing the resources to the current player
 // status: done
-void Player::geese_remove_resource(Resource type, int num){
+void Player::remove_resource(Resource type, int num){
     if (type == Resource::BRICK){
         brick-=num;
         if (brick < 0) brick = 0;}
@@ -96,152 +80,12 @@ void Player::geese_remove_resource(Resource type, int num){
         if (heat < 0) heat = 0;}
 }
 
-// returns true if the vertex is connected to the player's road
-// status: 
-bool Player::on_the_road(int vertex_number, Board board){
-
-}
-
-// set up the initial basement
-// status: 
-bool Player::add_initial_basement(int vertex_number, Board board){
-    // check availability
-
-    // check if adjacent vertex has residence
-    for(Vertex item : board.getVertices()){
-        if (item.getVertex() == vertex_number){
-            if(item.is_there_building() == false && item.can_i_build(colour) == false){
-                buildings.push_back(Vertex(vertex_number, BuildingType::Basement, colour));
-                // print out message of the build
-                std::cout << stringColour() << " has built: \n";
-                std::cout << vertex_number << " " << stringBuilding(BuildingType::Basement) << "\n";
-
-                // check resources of neighbouring tiles and add these to the player
-
-                return true;
-            } else{
-                std::cout << "You cannot build here.\n";
-                return false;
-            }
-        }
-    }
-    std::cout << "You cannot build here.\n";
-    return false;
-}
-
-// building a residence at the given vertex point
-// active_player attempts to build residence at vertex_number, returns true if succeeds and returns false if fails
-// status:
-bool Player::build_residence(int vertex_number, Board board){
-    // building basement
-    // check availability
-
-     // check if adjacent vertex has residence
-     // must be on the road
-
-    
-    if(brick >= 1 && energy >= 1 && glass >= 1 && wifi >= 1){
-        // substract the resources
-        brick --;
-        energy --;
-        glass --;
-        wifi --;
-        // add the new basement to the buildigns list
-        buildings.push_back(Vertex(vertex_number, BuildingType::Basement, colour));
-        // print out message of the build
-        std::cout << stringColour() << " has built: \n";
-        std::cout << vertex_number << " " << stringBuilding(BuildingType::Basement) << "\n";
-        // adding one building point
-        building_points++;
-        return true;
-    } else {
-        // if the player does not have enough resource
-        std::cout << "You do not have enough resources.\n";
-        return false;
-    }
-} 
-
-// improve the building at given vertext point
-// status: done
-bool Player::improve_building(int vertex_number){
-    for (Vertex item : buildings){
-        if(item.getVertex() == vertex_number){
-            // potentially upgrade if it is a basement
-            if(item.getType() == BuildingType::Basement){
-                // upgrade to house if enough resources
-                if(glass >= 2 && heat >= 3){ 
-                    // substract the resources
-                    glass -= 2;
-                    heat -= 3;
-                    // upgrade the building to the next level
-                    item.upgrade();
-                    // print out message of the build
-                    std::cout << stringColour() << " has built: \n";
-                    std::cout << vertex_number << " " << stringBuilding(BuildingType::House) << "\n";
-                    // adding two building points
-                    building_points+=2;
-                    return true;
-                }else{
-                    // if the player does not have enough resources
-                    std::cout << "You do not have enough resources.\n";
-                    return false;
-                }    
-            }
-                std::cout << "Basement: " << item.getVertex() << std::endl;
-            // potentially upgrade if it is a house
-            if(item.getType() == BuildingType::House){
-                // upgrade to tower if enough resources
-                if(brick >= 3 && energy >= 2 && glass >= 2 && heat >= 2 && wifi >= 1){
-                    // subtract the resources
-                    brick -= 3;
-                    energy -= 2;
-                    glass -= 2;
-                    heat -= 2;
-                    wifi -= 1;
-                    // upgrade the building to the next level
-                    item.upgrade();
-                    // print out message of the build
-                    std::cout << stringColour() << " has built: \n";
-                    std::cout << vertex_number << " " << stringBuilding(BuildingType::Tower) << "\n";
-                    // adding three building points
-                    building_points+=3;
-                }else{
-                    // if the player does not have enough resources
-                    std::cout << "You do not have enough resources.\n";
-                    return false;
-                }
-            }
-            // print out if it is a tower
-            if(item.getType() == BuildingType::Tower){
-                std::cout << "You cannot improve a tower.\n";
-                return false;
-            }
-        }
-    }
-    // if the player doesn't having a building on this vertex
-    std::cout << "You cannot build here.\n";
-    return false;
-}
-
-// build a road at a given edge number
-// status:
-bool Player::build_road(int edge_number, Board board){
-    // check availability
-
-    //if there's adjacent road
-    //if there's adjacent residence
-
-    roads.push_back(Edge(edge_number, colour));
-
-    std::cout << "You do not have enough resrouces.\n";
-}
-
 // true if trade agreed, false if declined
 // status:
 bool Player::request_trade(Colour colour, Resource give, Resource take){
 
-    std::cout << "<colour1> offers <colour2> one <resource1> for one <resource2>.\n";
-    std::cout << "Does <colour2> accept this offer?\n";
+    std::cout << "<colour1> offers <colour2> one <resource1> for one <resource2>."<< std::endl;
+    std::cout << "Does <colour2> accept this offer?" << std::endl;
 
 } // true if trade agreed, false if declined
 
@@ -266,22 +110,22 @@ void Player::save_player_data(std::string filename) {
     outputFile<<" "<<brick<<" "<<energy<<" "<<glass<<" "<<heat<<" "<<wifi<<" ";
     // output the roads to be saved
     outputFile << "r";
-    for (Edge item : roads){
-        outputFile << " " << item.getEdge();
+    for (int item : roads){
+        outputFile << " " << item;
     }
     // output the buildings to be saved
     outputFile << " h ";
-    for (Vertex item : buildings){
+    for (int item : buildings){
         // print out if it is a basement
         if(item.getType() == BuildingType::Basement) 
-            outputFile << item.getVertex() << " B ";
+            outputFile << item << " B ";
         // print out if it is a house
         if(item.getType() == BuildingType::House)
-            outputFile << item.getVertex() << " T ";
+            outputFile << item << " T ";
         // print out if it is a tower
         if(item.getType() == BuildingType::Tower)
-            outputFile << item.getVertex() << " H ";
+            outputFile << item << " H ";
     }
-    outputFile << "\n";
+    outputFile << std::endl;
 }
 
