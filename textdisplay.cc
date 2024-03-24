@@ -3,40 +3,40 @@ using namespace std;
 
 TextDisplay::TextDisplay(Board* board) : board{board} {}
 
-string TextDisplay::horizontal_edge(int edge_number) {
-	return "--" + board->edges[edge_number].print() + "--";
+string TextDisplay::horizontal_edge(int index) {
+	return "--" + board->print_edge(index) + "--";
 }
 
-string TextDisplay::vertical_edge(int edge_number) {
-        return " " + board->edges[edge_number].print() + " ";
+string TextDisplay::vertical_edge(int index) {
+        return " " + board->print_edge(index) + " ";
 }
 
 string TextDisplay::edge_filler() {
 	return "  | ";
 }
 
-string TextDisplay::vertex(int vertex_number) {
-	return "|" + board->vertices[vertex_number].print() + "|";
+string TextDisplay::vertex(int index) {
+	return "|" + board->print_vertex(index) + "|";
 }
 
 string TextDisplay::tile_filler() {
 	return "      ";
 }
 
-string TextDisplay::tile_num(int tile_number) {
-	return board->tiles[tile_number].print_num();
+string TextDisplay::tile_num(int index) {
+	return board->print_tile_num(index);
 }
 
-string TextDisplay::tile_resource(int tile_number) {
-        return board->tiles[tile_number].print_resource();
+string TextDisplay::tile_resource(int index) {
+        return board->print_tile_resource(index);
 }
 
-string TextDisplay::tile_value(int tile_number) {
-        return board->tiles[tile_number].print_value();
+string TextDisplay::tile_value(int index) {
+        return board->print_tile_value(index);
 }
 
-string TextDisplay::tile_geese(int tile_number) {
-        return board->tiles[tile_number].print_geese();
+string TextDisplay::tile_geese(int index) {
+        return board->print_tile_geese(index);
 }
 
 ostream& TextDisplay::print(ostream& out) {
