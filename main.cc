@@ -4,7 +4,7 @@
 #include <iostream>
 using namespace std;
 
-// this is for testing
+// this is for testing 2
 int main() {
 	Board board = ReadBoard().create();
 	TextDisplay td{&board};
