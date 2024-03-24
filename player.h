@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "sketch.h"
+#include "board.h"
 
 class Player {
 private:
@@ -12,29 +12,28 @@ private:
 	int glass;
 	int heat;
 	int wifi;
-	std::vector<Vertex> buildings;
-	std::vector<Edge> roads;
+	std::vector<int> buildings;
+	std::vector<int> roads;
 public:
 	Player(Colour colour);
 	~Player();
 
-	std::string stringColour();
-	std::string stringResource(Resource res);
-	std::string stringBuilding(BuildingType bui);
+	Colour getColour();
+	int getBrick();
+	int getEnergy();
+	int getGlass();
+	int getHeat();
+	int getWifi();
+	std::vector<int> getBuildings();
+	std::vector<int> getRoads();
+
+	void changeBuildingPoint(int num);
 
 	void print_resources();
 	void print_residences();
 
 	void add_resource(Resource type, int num);
-	void geese_remove_resource(Resource type, int num);
-
-	bool on_the_road(int vertex_number, Board board); // returns true if the vertex is connected to the player's road
-
-	bool add_initial_basement(int vertex_number, Board board);
-	bool build_residence(int vertex_number, Board board); // active_player attempts to build residence at vertex_number, returns true if succeeds and returns false if fails
-	bool build_road(int edge_number, Board board);
-
-	bool improve_building(int vertex_number);
+	void remove_resource(Resource type, int num);
 
 	bool request_trade(Colour colour, Resource give, Resource take); // true if trade agreed, false if declined
 	void resolve_trade(Colour colour, Resource give, Resource take); // called if trade agreed
