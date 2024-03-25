@@ -5,8 +5,8 @@ ReadBoard::ReadBoard(const std::string filename) :
 	filename{filename} {}
 
 Board ReadBoard::create() {
+	vector<Tile> tiles;
 	ifstream ifs{filename};
-	Board b;
 	int resource_type;
 	int value;
 	int num = 0;
@@ -15,10 +15,11 @@ Board ReadBoard::create() {
 		if (not (ifs >> value)) break;
 		bool geese = (value == 7) ? true : false;
 		Resource resource = translateResource(resource_type);
-		b.getTiles().push_back(Tile(num, value, geese, resource));
+		tiles.push_back(Tile(num, value, geese, resource));
 		++num;
 	}
 	
+	vector<Edge> edges;
 	ifstream ifs_ee{"ee.txt"};
 	ifstream ifs_ev{"ev.txt"};
 	string line_ee;
@@ -33,10 +34,11 @@ Board ReadBoard::create() {
 		int ev_num;
 		while (iss_ee >> ee_num) vec_ee.push_back(ee_num);
 		while (iss_ev >> ev_num) vec_ev.push_back(ev_num);
-		b.getEdges().push_back(Edge(num, vec_ee, vec_ev));
+		edges.push_back(Edge(num, vec_ee, vec_ev));
 		++num;
 	}
 	
+	vector<Vertex> vertices;
 	ifstream ifs_vv{"vv.txt"};
 	ifstream ifs_vt{"vt.txt"};
 	ifstream ifs_ve{"ve.txt"};
@@ -57,9 +59,9 @@ Board ReadBoard::create() {
 		while (iss_vv >> vv_num) vec_vv.push_back(vv_num);
 		while (iss_vt >> vt_num) vec_vt.push_back(vt_num);
 		while (iss_ve >> ve_num) vec_ve.push_back(ve_num);
-		b.getVertices().push_back(Vertex(num, vec_vv, vec_vt, vec_ve));
+		vertices.push_back(Vertex(num, vec_vt, vec_ve, vec_vv));
 		++num;
 	}
 
-	return b;
+	return Board(tiles, edges, vertices);
 }

@@ -22,8 +22,7 @@ class Road {
 	Road();
 	Road(Colour colour);
 	string print() const;
-	
-	Colour getColour();
+	Colour getColour() const;
 };
 
 class Building {
@@ -32,10 +31,9 @@ class Building {
 
 	public:
 	Building();
-	Building(Colour colour, BuildingType type);
+	Building(Colour colour);
 	string print() const;
-	BuildingType getType();
-	Colour getColour();
+	Colour getColour() const;
 };
 
 
@@ -52,6 +50,8 @@ class Tile {
 	string print_resource() const;
 	string print_value() const;
 	string print_geese() const;
+	bool have_geese() const;
+	void set_geese(bool value);
 };
 
 // 72 instances
@@ -65,11 +65,11 @@ class Edge {
 	public:
 	Edge(int edge_number, vector<int> neighbouring_edges, vector<int> neighbouring_vertices);
 	string print() const;
-	vector<int> get_neighbour_vertices();
-	vector<int> get_neighbour_edges();
-	bool road_exist();
-	Road getRoad();
-	void add_road_exist(bool status);
+	vector<int> get_neighbour_vertices() const;
+	vector<int> get_neighbour_edges() const;
+	bool road_exist() const;
+	void place_road(Colour colour);
+	Road getRoad() const;
 };
 
 // 54 instances
@@ -84,13 +84,11 @@ class Vertex {
 	public:
 	Vertex(int vertex_number, vector<int> neighbouring_tiles, vector<int> neighbouring_edges, vector<int> neighbouring_vertices);
 	string print() const;
-
-	bool building_exist();
-	void add_building_exist(bool status);
-	vector<int> get_neighbour_vertices();
-	vector<int> get_neighbour_edges();
-	Building getBuilding();
-
+	vector<int> get_neighbour_vertices() const;
+	vector<int> get_neighbour_edges() const;
+	bool building_exist() const;
+	void place_basement(Colour colour);
+	Building getBuilding() const;
 };
 
 // 1 instance
@@ -100,8 +98,8 @@ class Board {
 	vector<Vertex> vertices; // 54 vertices
 	
 	public:
-	Board();
 	Board(vector<Tile> tiles, vector<Edge> edges, vector<Vertex> vertices);
+	
 	string print_edge(int index) const;
 	string print_vertex(int index) const;
 	string print_tile_num(int index) const;
@@ -109,13 +107,10 @@ class Board {
 	string print_tile_value(int index) const;
 	string print_tile_geese(int index) const;
 
-	vector<Tile> getTiles(){return tiles;}
-	vector<Edge> getEdges(){return edges;}
-	vector<Vertex> getVertices(){return vertices;}
-
-	bool can_i_build_initial(int vertex_number, Colour colour);
-	bool can_i_build(int vertex_number, Colour colour);
-	bool can_i_build_road(int edge_number, Colour colour);
+	bool build_initial(Colour colour, int vertex);
+	bool build_building(Colour colour, int vertex);
+	bool build_road(Colour colour, int edge);
+	bool move_geese(int tile);
 };
 
 
