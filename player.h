@@ -16,21 +16,9 @@ private:
 	std::vector<int> roads;
 public:
 	Player(Colour colour);
-	~Player();
-
-	Colour getColour();
-	int getBrick();
-	int getEnergy();
-	int getGlass();
-	int getHeat();
-	int getWifi();
-	std::vector<int> getBuildings();
-	std::vector<int> getRoads();
-
-	void changeBuildingPoint(int num);
 
 	void print_resources();
-	void print_residences();
+	void print_residences(Board b);
 
 	void add_resource(Resource type, int num);
 	void remove_resource(Resource type, int num);
@@ -39,6 +27,13 @@ public:
 	void resolve_trade(Colour colour, Resource give, Resource take); // called if trade agreed
 	bool place_geese(); // if trying to place geese at invalid location, call it again to make the player try again
 
-	void save_player_data(std::string filename); // output the player data to the document to save file
+	void save_player_data(std::string filename, Board b); // output the player data to the document to save file
+
+	bool build_residence(int vertex_number, Board b);
+	bool add_initial_basement(int vertex_number, Board b);
+	bool build_road(int edge_number, Board b);
+	bool add_initial_road(int edge_number, Board b);
+	bool improve_building(int vertex_number, Board b);
+
 };
 

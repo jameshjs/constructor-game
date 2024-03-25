@@ -15,8 +15,6 @@ string print_Building(BuildingType bui){
     else if(bui == BuildingType::House) return "house";
     else if(bui == BuildingType::Tower) return "tower";
 }
-BuildingType Building::getType(){return type;}
-Colour Building::getColour(){return colour;}
 
 Resource translateResource(int i) {
 	switch(i) {
@@ -46,6 +44,8 @@ Edge::Edge(int edge_number, vector<int> neighbouring_edges, vector<int> neighbou
 	edge_number{edge_number}, road_built{false}, neighbouring_edges{std::move(neighbouring_edges)}, neighbouring_vertices{std::move(neighbouring_vertices)} {}
 bool Edge::road_exist(){return road_built;}
 Road Edge::getRoad(){return road;}
+vector<int> Edge::get_neighbour_vertices(){return neighbouring_vertices;}
+vector<int> Edge::get_neighbour_edges(){return neighbouring_edges;}
 void Edge::add_road_exist(bool status){road_built = status;};
 
 Vertex::Vertex(int vertex_number, vector<int> neighbouring_tiles, vector<int> neighbouring_edges, vector<int> neighbouring_vertices) :
@@ -56,12 +56,15 @@ vector<int> Vertex::get_neighbour_vertices(){return neighbouring_vertices;}
 vector<int> Vertex::get_neighbour_edges(){return neighbouring_edges;}
 Building Vertex::getBuilding(){return building;}
 
+Road::Road(){}
 Road::Road(Colour colour) : colour(colour){}
-Road::~Road();
 
+Building::Building(){}
+Building::Building(Colour colour, BuildingType type):colour(colour), type(type){}
 BuildingType Building::getType(){return type;}
 Colour Building::getColour(){return colour;}
 
+Board::Board(){}
 Board::Board(vector<Tile> tiles, vector<Edge> edges, vector<Vertex> vertices) :
 	tiles{tiles}, edges{edges}, vertices{vertices} {}
 bool Board::can_i_build_initial(int vertex_number, Colour colour){
@@ -113,176 +116,6 @@ bool Board::can_i_build_road(int edge_number, Colour colour){
 		}
 		return false;
 	}
-
-// building a residence at the given vertex point
-// active_player attempts to build residence at vertex_number, returns true if succeeds and returns false if fails
-// status: done
-bool Board::build_residence(int vertex_number, Player p){
-    // building basement
-     // check if adjacent vertex has residence
-     // must be on the road of the same colour
-	if (can_i_build(vertex_number, p.getColour()) == true){
-		if(p.getBrick() >= 1 && p.getEnergy() >= 1 && p.getGlass() >= 1 && p.getWifi() >= 1){
-			// substract the resources
-			p.remove_resource(Resource::BRICK, 1);
-			p.remove_resource(Resource::ENERGY, 1);
-			p.remove_resource(Resource::GLASS, 1);
-			p.remove_resource(Resource::WIFI, 1);
-
-			// add the new basement to the buildigns list
-			p.getBuildings().push_back(vertex_number);
-			// adding the new building to the vertex
-			vertices[vertex_number].getBuilding() = Building(p.getColour(), BuildingType::Basement);
-			vertices[vertex_number].add_building_exist(true);
-			// print out message of the build
-			std::cout << print_colour(p.getColour()) << " has built: " << std::endl;
-			std::cout << vertex_number << " " << print_building(BuildingType::Basement) << std::endl;
-			// adding one building point
-			p.changeBuildingPoint(1);
-			return true;
-		} else {
-			// if the player does not have enough resource
-			std::cout << "You do not have enough resources."<< std::endl;
-			return false;
-		}
-	} else{
-		// if the player does not have enough resource
-		std::cout << "You cannot build here" << std::endl;
-		return false;
-	}
-} 
-
-// set up the initial basement
-// status: done
-bool Board::add_initial_basement(int vertex_number, Player p){
-    // check availability
-    if(can_i_build_initial(vertex_number, p.getColour()) == true){
-        // add the new basement to the buildigns list
-		p.getBuildings().push_back(vertex_number);
-		// adding the new building to the vertex
-		vertices[vertex_number].getBuilding() = Building(p.getColour(), BuildingType::Basement);
-		vertices[vertex_number].add_building_exist(true);
-        // print out message of the build
-        std::cout << print_colour(p.getColour()) << " has built: "<< std::endl;
-        std::cout << vertex_number << " " << print_building(BuildingType::Basement) << std::endl;
-        return true;
-    } else{
-        std::cout << "You cannot build here."<< std::endl;
-        return false;
-    }
-}
-
-// build a road at a given edge number
-// status:
-bool Board::build_road(int edge_number, Player p){
-    // check availability
-	if (can_i_build_road(edge_number, p.getColour()) == true){
-		if(p.getHeat() >= 1 && p.getWifi() >= 1){
-			// substract the resources
-			p.remove_resource(Resource::HEAT, 1);
-			p.remove_resource(Resource::WIFI, 1);
-			
-			// add the new basement to the buildigns list
-			p.getRoads().push_back(edge_number);
-			// adding the new building to the vertex
-			edges[edge_number].getRoad() = Road(p.getColour());
-			edges[edge_number].add_road_exist(true);
-			// print out message of the build
-			std::cout << print_colour(p.getColour()) << " has built: "<< std::endl;
-			std::cout << edge_number << " " << " road" << std::endl;
-			return true;
-		} else {
-			// if the player does not have enough resource
-			std::cout << "You do not have enough resources."<< std::endl;
-			return false;
-		}
-	} else {
-        std::cout << "You cannot build here."<< std::endl;
-        return false;
-    }
-}
-
-// build a road at a given edge number
-// status:
-bool Board::add_initial_road(int edge_number, Player p){
-    // check availability
-	if (can_i_build_road(edge_number, p.getColour()) == true){
-		// add the new basement to the buildigns list
-		p.getRoads().push_back(edge_number);
-		// adding the new building to the vertex
-		edges[edge_number].getRoad() = Road(p.getColour());
-		edges[edge_number].add_road_exist(true);
-        // print out message of the build
-        std::cout << print_colour(p.getColour()) << " has built: "<< std::endl;
-        std::cout << edge_number << " " << " road" << std::endl;
-        return true;
-	} else {
-        std::cout << "You cannot build here."<< std::endl;
-        return false;
-    }
-}
-
-// improve the building at given vertext point
-// status: done
-bool Board::improve_building(int vertex_number, Player p){
-    for (int item : p.getBuildings()){
-        if(item == vertex_number){
-            // potentially upgrade if it is a basement
-            if(vertices[item].getBuilding().getType() == BuildingType::Basement){
-                // upgrade to house if enough resources
-                if(p.getGlass() >= 2 && p.getHeat() >= 3){ 
-                    // substract the resources
-					p.remove_resource(Resource::GLASS, 2);
-					p.remove_resource(Resource::HEAT, 3);
-                    // adding the new building to the vertex
-					vertices[vertex_number].getBuilding() = Building(p.getColour(), BuildingType::House);
-                    // print out message of the build
-                    std::cout << print_colour(p.getColour()) << " has built: "<< std::endl;
-                    std::cout << vertex_number << " " << print_building(BuildingType::House) << std::endl;
-					// adding two building point
-					p.changeBuildingPoint(2);
-                    return true;
-                }else{
-                    // if the player does not have enough resources
-                    std::cout << "You do not have enough resources." << std::endl;
-                    return false;
-                }    
-            }
-            // potentially upgrade if it is a house
-            if(vertices[item].getBuilding().getType() == BuildingType::House){
-                // upgrade to tower if enough resources
-                if(p.getBrick() >= 3 && p.getEnergy() >= 2 && p.getGlass() >= 2 && p.getHeat() >= 2 && p.getWifi() >= 1){
-                    // subtract the resources
-					p.remove_resource(Resource::BRICK, 3);
-					p.remove_resource(Resource::ENERGY, 2);
-					p.remove_resource(Resource::GLASS, 2);
-					p.remove_resource(Resource::HEAT, 2);
-					p.remove_resource(Resource::WIFI, 1);
-                    // upgrade the building to the next level
-                    vertices[vertex_number].getBuilding() = Building(p.getColour(), BuildingType::Tower);
-                    // print out message of the build
-                    std::cout << print_colour(p.getColour()) << " has built: " << std::endl;
-                    std::cout << vertex_number << " " << print_building(BuildingType::Tower) << std::endl;
-                    // adding three building points
-                    p.changeBuildingPoint(3);
-					return true;
-                }else{
-                    // if the player does not have enough resources
-                    std::cout << "You do not have enough resources."<< std::endl;
-                    return false;
-                }
-            }
-            // print out if it is a tower
-            if(vertices[item].getBuilding().getType() == BuildingType::Tower){
-                std::cout << "You cannot improve a tower."<< std::endl;
-                return false;
-            }
-        }
-    }
-    // if the player doesn't having a building on this vertex
-    std::cout << "You cannot build here."<< std::endl;
-    return false;
-}
 
 string Road::print() const {
 	return print_colour(colour) + "R"; 

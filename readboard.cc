@@ -15,7 +15,7 @@ Board ReadBoard::create() {
 		if (not (ifs >> value)) break;
 		bool geese = (value == 7) ? true : false;
 		Resource resource = translateResource(resource_type);
-		b.tiles.push_back(Tile(num, value, geese, resource));
+		b.getTiles().push_back(Tile(num, value, geese, resource));
 		++num;
 	}
 	
@@ -33,7 +33,7 @@ Board ReadBoard::create() {
 		int ev_num;
 		while (iss_ee >> ee_num) vec_ee.push_back(ee_num);
 		while (iss_ev >> ev_num) vec_ev.push_back(ev_num);
-		b.edges.push_back(Edge(num, vec_ee, vec_ev));
+		b.getEdges().push_back(Edge(num, vec_ee, vec_ev));
 		++num;
 	}
 	
@@ -57,7 +57,7 @@ Board ReadBoard::create() {
 		while (iss_vv >> vv_num) vec_vv.push_back(vv_num);
 		while (iss_vt >> vt_num) vec_vt.push_back(vt_num);
 		while (iss_ve >> ve_num) vec_ve.push_back(ve_num);
-		b.vertices.push_back(Vertex(num, vec_vv, vec_vt, vec_ve));
+		b.getVertices().push_back(Vertex(num, vec_vv, vec_vt, vec_ve));
 		++num;
 	}
 

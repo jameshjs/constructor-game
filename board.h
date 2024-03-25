@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <vector>
-#include "player.h"
 using namespace std;
 
 enum class Colour {Blue, Red, Orange, Yellow};
@@ -20,8 +19,8 @@ class Road {
 	Colour colour;
 	
 	public:
+	Road();
 	Road(Colour colour);
-	~Road();
 	string print() const;
 	
 	Colour getColour();
@@ -32,8 +31,8 @@ class Building {
 	BuildingType type;
 
 	public:
+	Building();
 	Building(Colour colour, BuildingType type);
-	~Building();
 	string print() const;
 	BuildingType getType();
 	Colour getColour();
@@ -101,6 +100,7 @@ class Board {
 	vector<Vertex> vertices; // 54 vertices
 	
 	public:
+	Board();
 	Board(vector<Tile> tiles, vector<Edge> edges, vector<Vertex> vertices);
 	string print_edge(int index) const;
 	string print_vertex(int index) const;
@@ -116,12 +116,6 @@ class Board {
 	bool can_i_build_initial(int vertex_number, Colour colour);
 	bool can_i_build(int vertex_number, Colour colour);
 	bool can_i_build_road(int edge_number, Colour colour);
-
-	bool build_residence(int vertex_number, Player p); // active_player attempts to build residence at vertex_number, returns true if succeeds and returns false if fails
-	bool add_initial_basement(int vertex_number, Player p);
-	bool build_road(int edge_number, Player p);
-	bool add_initial_road(int edge_number, Player p);
-	bool improve_building(int vertex_number, Player p);
 };
 
 
