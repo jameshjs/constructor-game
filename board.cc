@@ -29,6 +29,8 @@ string Board::print_tile_geese(int index) const {
 	return tiles[index].print_geese();
 }
 
+int Board::obtain_resource(int index) const {return 0;}
+
 bool Board::build_initial(Colour colour, int vertex) {
 	if (vertices[vertex].building_exist()) return false;
 	vertices[vertex].place_basement(colour);
