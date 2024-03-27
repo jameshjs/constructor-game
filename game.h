@@ -24,11 +24,12 @@ class Game {
 	void trade(Colour c1, Colour c2, Resource r1, Resource r2); // unimplemented
 	void save(); // unimplemented
 
-	public:
-	Game();
 	void game_start(); // unimplemented
 	void turn_start(); // unimplemented
 	void turn_middle(); // unimplemented
+
+	public:
+	Game();
 	void run();
 };
 
