@@ -9,3 +9,13 @@ string td_colour(Colour colour) {
 	}
 	return "Y";
 }
+
+ostream& operator<<(ostream& out, const Colour colour) {
+	switch(colour) {
+		case Colour::Blue : return out << "Blue";
+		case Colour::Red : return out << "Red";
+		case Colour::Orange : return out << "Orange";
+		case Colour::Yellow : return out << "Yellow";
+	}
+	return out;
+}

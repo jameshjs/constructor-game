@@ -74,3 +74,7 @@ bool Board::move_geese(int tile) {
 	tiles[tile].set_geese(true);
 	return true;
 }
+
+bool Board::improve_building(int vertex) {
+	return false;
+}

@@ -28,6 +28,7 @@ class Board {
 
 	bool build_initial(Colour colour, int vertex);
 	bool build_building(Colour colour, int vertex);
+	bool improve_building(int vertex); // unimplemented
 	bool build_road(Colour colour, int edge);
 	bool move_geese(int tile);
 };

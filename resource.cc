@@ -14,8 +14,9 @@ Resource translateResource(int i) {
 
 string print_resource(Resource res){
 	if(res == Resource::BRICK) return "brick";
-	else if(res == Resource::ENERGY) return "energy";
-	else if(res == Resource::GLASS) return "glass";
-	else if(res == Resource::HEAT) return "heat";
-	else if(res == Resource::WIFI) return "wifi";
+	if(res == Resource::ENERGY) return "energy";
+	if(res == Resource::GLASS) return "glass";
+	if(res == Resource::HEAT) return "heat";
+	if(res == Resource::WIFI) return "wifi";
+	return "";
 }

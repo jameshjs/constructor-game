@@ -1,5 +1,13 @@
 #include "vertex.h"
 
+ostream& operator<<(ostream& out, const BuildingType type) {
+	switch(type) {
+		case BuildingType::Basement : return out << "Basement";
+		case BuildingType::House : return out << "House";
+		case BuildingType::Tower : return out << "Tower";
+	}
+	return out;
+}
 
 Building::Building() {}
 Building::Building(Colour colour) : colour{colour}, type{BuildingType::Basement} {}
@@ -14,6 +22,7 @@ string Building::print() const {
 }
 
 Colour Building::getColour() const {return colour;}
+BuildingType Building::getType() const {return type;}
 
 Vertex::Vertex(int vertex_number, vector<int> neighbouring_tiles, vector<int> neighbouring_edges, vector<int> neighbouring_vertices) :
 	vertex_number{vertex_number}, 
