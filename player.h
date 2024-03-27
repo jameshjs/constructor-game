@@ -25,9 +25,7 @@ public:
 	Player(Colour colour);
 	ostream& print_resources(ostream& out);
 	ostream& print_residences(ostream& out);
-	
-	//vector<Building>& get_buildings();
-	//vector<Road>& get_roads();
+
 	Colour get_colour() const;
 	
 	void add_building(int index); // add to vector
