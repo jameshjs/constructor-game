@@ -26,6 +26,7 @@ class Board {
 	string print_tile_value(int index) const;
 	string print_tile_geese(int index) const;
 
+	int obtain_resource(int index) const; // unimplemented
 	bool build_initial(Colour colour, int vertex);
 	bool build_building(Colour colour, int vertex);
 	bool improve_building(int vertex); // unimplemented
