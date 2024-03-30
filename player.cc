@@ -113,6 +113,4 @@ void Player::gain_resource(Resource resource, int num) {
 	if (resource == Resource::WIFI) wifi += num;
 }
 
-void Player::lose_resource(Resource resource, int num) {}
-
 void Player::save_player_data() {}

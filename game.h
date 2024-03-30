@@ -14,6 +14,11 @@ class Game {
 	TextDisplay td;
 	map<Colour, Player> players;
 	
+	int req_int(); // get an int from user via cin, keep asking until you get an int
+	string req_command();
+	Colour req_colour();
+	Resource req_resource();
+
 	int roll_dice(); // unimplemented
 	void obtain_resource(int roll); 
 	bool build_initial(Colour colour, int vertex);

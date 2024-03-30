@@ -44,7 +44,6 @@ public:
 
 	void lost_to_geese(); // lost to geese// unimplemented 
 	void gain_resource(Resource resource, int num); // dice roll or trade or steal
-	void lose_resource(Resource resource, int num); // trade or steal// unimplemented 
 
 	void save_player_data();// unimplemented 
 };
