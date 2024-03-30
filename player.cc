@@ -22,6 +22,10 @@ Colour Player::get_colour() const {
 	return colour;
 }
 
+map<int, Building> Player::get_buildings() {
+	return buildings;
+}
+
 void Player::add_building(int index) {
 	buildings[index] = Building{colour};
 	return;
@@ -32,7 +36,33 @@ void Player::add_road(int index) {
 	return;
 }
 
+void Player::build_building(int index) {
+	buildings[index] = Building{colour};
+	brick -= 1;
+	energy -= 1;
+	glass -= 1;
+	return;
+}
+
+void Player::build_road(int index) {
+	heat -= 1;
+	wifi -= 1;
+	roads[index] = Road{colour};
+	return;
+}
+
 void Player::improve(int index) {
+	if (buildings[index].getType() == BuildingType::Basement) {
+		glass -= 2;
+		heat -= 3;
+	} else if (buildings[index].getType() == BuildingType::House) {
+		brick -= 3;
+		energy -= 2;
+		glass -= 2;
+		wifi -= 1;
+		heat -= 2;
+	}
+	buildings[index].improve();
 	return;
 }
 
@@ -64,11 +94,25 @@ bool Player::can_improve_t() const {
 	return true;
 }
 
+bool Player::can_improve(int index) const {
+	if (buildings.count(index) == 0) return false;
+	if (buildings.at(index).getType() == BuildingType::Basement) return can_improve_h();
+	if (buildings.at(index).getType() == BuildingType::House) return can_improve_t();
+	return false;
+}
+
 void Player::lost_to_geese() {
 	return;
 }
 
-void Player::gain_resource(Resource resource, int num) {}
+void Player::gain_resource(Resource resource, int num) {
+	if (resource == Resource::BRICK) brick += num;
+	if (resource == Resource::ENERGY) energy += num;
+	if (resource == Resource::GLASS) glass += num;
+	if (resource == Resource::HEAT) heat += num;
+	if (resource == Resource::WIFI) wifi += num;
+}
+
 void Player::lose_resource(Resource resource, int num) {}
 
 void Player::save_player_data() {}

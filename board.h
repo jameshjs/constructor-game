@@ -26,10 +26,12 @@ class Board {
 	string print_tile_value(int index) const;
 	string print_tile_geese(int index) const;
 
-	int obtain_resource(int index) const; // unimplemented
+	int obtain_resource(int tile, BuildingType type, int roll) const; 
+	Resource resource_type(int tile) const;
+	vector<int>& get_neighbour_tiles(int vertex);
 	bool build_initial(Colour colour, int vertex);
 	bool build_building(Colour colour, int vertex);
-	bool improve_building(int vertex); // unimplemented
+	void improve_building(int vertex); 
 	bool build_road(Colour colour, int edge);
 	bool move_geese(int tile);
 };

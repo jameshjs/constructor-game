@@ -29,7 +29,21 @@ string Board::print_tile_geese(int index) const {
 	return tiles[index].print_geese();
 }
 
-int Board::obtain_resource(int index) const {return 0;}
+int Board::obtain_resource(int tile, BuildingType type, int roll) const {
+	if (tiles[tile].get_value() != roll) return 0;
+	if (tiles[tile].have_geese()) return 0;
+	if (type == BuildingType::Basement) return 1;
+	if (type == BuildingType::House) return 2;
+	return 3;
+}
+
+Resource Board::resource_type(int tile) const {
+	return tiles[tile].get_resource();
+}
+
+vector<int>& Board::get_neighbour_tiles(int vertex) {
+	return vertices[vertex].get_neighbour_tiles();
+}
 
 bool Board::build_initial(Colour colour, int vertex) {
 	if (vertices[vertex].building_exist()) return false;
@@ -77,6 +91,6 @@ bool Board::move_geese(int tile) {
 	return true;
 }
 
-bool Board::improve_building(int vertex) {
-	return false;
+void Board::improve_building(int vertex) {
+	vertices[vertex].improve();
 }

@@ -14,10 +14,12 @@ class Game {
 	TextDisplay td;
 	map<Colour, Player> players;
 	
-	void roll_dice(); // unimplemented
+	int roll_dice(); // unimplemented
+	void obtain_resource(int roll); 
 	bool build_initial(Colour colour, int vertex);
-	bool build_road(Colour colour, int edge); // unimplemented
-	bool improve(Colour colour, int vertex); // unimplemented
+	bool build_building(Colour colour, int vertex);
+	bool build_road(Colour colour, int edge); 
+	bool improve(Colour colour, int vertex); 
 	void help(); // unimplemented
 	void geese(); // unimplemented
 	void steal(); // unimplemented
