@@ -2,6 +2,10 @@
 
 Player::Player(Colour colour) : colour{colour}, building_points{0}, brick{0}, energy{0}, glass{0}, heat{0}, wifi{0} {}
 
+int Player::resource_total() const {
+	return brick + energy + glass + heat + wifi;
+}
+
 ostream& Player::print_resources(ostream& out) {
 	out << colour << " has " << building_points << " building points, " << 
 		brick << " brick, " <<
@@ -22,12 +26,22 @@ Colour Player::get_colour() const {
 	return colour;
 }
 
+bool Player::have_resource(Resource r) const {
+	if (r == Resource::BRICK) return brick > 0;
+	if (r == Resource::ENERGY) return energy > 0;
+	if (r == Resource::GLASS) return glass > 0;
+	if (r == Resource::HEAT) return heat > 0;
+	if (r == Resource::WIFI) return wifi > 0;
+	return false;
+}
+
 map<int, Building> Player::get_buildings() {
 	return buildings;
 }
 
 void Player::add_building(int index) {
 	buildings[index] = Building{colour};
+	++building_points;
 	return;
 }
 
@@ -41,6 +55,7 @@ void Player::build_building(int index) {
 	brick -= 1;
 	energy -= 1;
 	glass -= 1;
+	++building_points;
 	return;
 }
 
@@ -62,6 +77,7 @@ void Player::improve(int index) {
 		wifi -= 1;
 		heat -= 2;
 	}
+	++building_points;
 	buildings[index].improve();
 	return;
 }
@@ -102,7 +118,65 @@ bool Player::can_improve(int index) const {
 }
 
 void Player::lost_to_geese() {
-	return;
+	if (resource_total() < 10) return;
+	int losses = resource_total() / 2;
+	int lost = 0;
+	int brick_lost = 0;
+	int energy_lost = 0;
+	int glass_lost = 0;
+	int heat_lost = 0;
+	int wifi_lost = 0;
+	while (lost != losses) {
+		int r = random(1, resource_total());
+		if (r <= brick) {
+			lose_resource(Resource::BRICK);
+			++brick_lost;
+		} else if (r <= energy + brick) {
+			lose_resource(Resource::ENERGY);
+			++energy_lost;
+		} else if (r <= glass + energy + brick) {
+			lose_resource(Resource::GLASS);
+			++glass_lost;
+		} else if (r <= heat + glass + energy + brick) {
+			lose_resource(Resource::HEAT);
+			++heat_lost;
+		} else if (r <= wifi + heat + glass + energy + brick) {
+			lose_resource(Resource::WIFI);
+			++wifi_lost;
+		} else {
+			cerr << "GEESE LOST RNG IS NOT HAPPY" << endl;
+		}
+		++lost;
+	}
+
+	cout << "Builder " << colour << " loses " << losses << " resources to the geese. They lose:" << endl;
+	if (brick_lost > 0) cout << brick_lost << " Brick" << endl;
+	if (energy_lost > 0) cout << energy_lost << " Energy" << endl;
+	if (glass_lost > 0) cout << glass_lost << " Glass" << endl;
+	if (heat_lost > 0) cout << heat_lost << " Heat" << endl;
+	if (wifi_lost > 0) cout << wifi_lost << " WiFi" << endl;
+}
+
+Resource Player::stolen() {
+	int r = random(1, resource_total());
+	if (r <= brick) {
+		lose_resource(Resource::BRICK);
+		return Resource::BRICK;
+	} else if (r <= energy + brick) {
+		lose_resource(Resource::ENERGY);
+		return Resource::ENERGY;
+	} else if (r <= glass + energy + brick) {
+		lose_resource(Resource::GLASS);
+		return Resource::GLASS;
+	} else if (r <= heat + glass + energy + brick) {
+		lose_resource(Resource::HEAT);
+		return Resource::HEAT;
+	} else if (r <= wifi + heat + glass + energy + brick) {
+		lose_resource(Resource::WIFI);
+		return Resource::WIFI;
+	} else {
+		cerr << "GEESE LOST RNG IS NOT HAPPY" << endl;
+	}
 }
 
 void Player::gain_resource(Resource resource, int num) {
@@ -111,6 +185,14 @@ void Player::gain_resource(Resource resource, int num) {
 	if (resource == Resource::GLASS) glass += num;
 	if (resource == Resource::HEAT) heat += num;
 	if (resource == Resource::WIFI) wifi += num;
+}
+
+void Player::lose_resource(Resource resource) {
+	if (resource == Resource::BRICK) --brick;
+	if (resource == Resource::ENERGY) --energy;
+	if (resource == Resource::GLASS) --glass;
+	if (resource == Resource::HEAT) --heat;
+	if (resource == Resource::WIFI) --wifi;
 }
 
 void Player::save_player_data() {}

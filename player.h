@@ -9,6 +9,7 @@
 #include "edge.h"
 #include "colour.h"
 #include "resource.h"
+#include "random.h"
 using namespace std;
 
 class Player {
@@ -22,6 +23,7 @@ private:
 	int wifi;
 	map<int, Building> buildings;
 	map<int, Road> roads;
+	Random random;
 	
 	bool can_improve_h() const;
 	bool can_improve_t() const;
@@ -32,6 +34,8 @@ public:
 
 	Colour get_colour() const;
 	map<int, Building> get_buildings();
+	int resource_total() const;
+	bool have_resource(Resource r) const;
 	
 	void add_building(int index); // add to vector
 	void add_road(int index); // add to vector
@@ -42,8 +46,10 @@ public:
 	bool can_build_r() const;
 	bool can_improve(int index) const;
 
-	void lost_to_geese(); // lost to geese// unimplemented 
+	void lost_to_geese(); // lost to geese
+	Resource stolen(); // got stolen from
 	void gain_resource(Resource resource, int num); // dice roll or trade or steal
+	void lose_resource(Resource resource);
 
 	void save_player_data();// unimplemented 
 };

@@ -6,18 +6,21 @@
 #include "readboard.h"
 #include "textdisplay.h"
 #include <map>
+#include <set>
 #include <string>
 using namespace std;
 
 class Game {
 	Board board;
 	TextDisplay td;
+	Colour current_player;
 	map<Colour, Player> players;
 	
-	int req_int(); // get an int from user via cin, keep asking until you get an int
-	string req_command();
-	Colour req_colour();
-	Resource req_resource();
+	int req_int(); // get an int from user via cin, keep asking until you get an int // unimplemented
+	string req_command(); // unimplemented
+	Colour req_colour(); // unimplemented
+	Resource req_resource(); // unimplemented
+	bool req_bool(); // unimplemented
 
 	int roll_dice(); // unimplemented
 	void obtain_resource(int roll); 
@@ -26,9 +29,8 @@ class Game {
 	bool build_road(Colour colour, int edge); 
 	bool improve(Colour colour, int vertex); 
 	void help(); // unimplemented
-	void geese(); // unimplemented
-	void steal(); // unimplemented
-	void trade(Colour c1, Colour c2, Resource r1, Resource r2); // unimplemented
+	void geese(); 
+	void trade(Colour c2, Resource r1, Resource r2); 
 	void save(); // unimplemented
 
 	void game_start(); // unimplemented
