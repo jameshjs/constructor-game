@@ -29,7 +29,6 @@ class Game {
 	void obtain_resource(int roll); 
 	bool build_initial(Colour colour, int vertex);
 	bool build_building(Colour colour, int vertex);
-	bool road_initial(Colour colour, int edge);
 	bool build_road(Colour colour, int edge); 
 	bool improve(Colour colour, int vertex); 
 	void help();

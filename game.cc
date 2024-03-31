@@ -21,12 +21,6 @@ bool Game::build_building(Colour colour, int vertex) {
 	return true;
 }
 
-bool Game::road_initial(Colour colour, int edge) {
-	if (not board.build_road(colour, edge)) return false;
-	players.at(colour).build_road(edge);
-	return true;
-}
-
 bool Game::build_road(Colour colour, int edge) {
 	if (not players.at(colour).can_build_r()) return false;
 	if (not board.build_road(colour, edge)) return false;
@@ -185,24 +179,12 @@ void Game::game_start() {
 			if(build_initial(c, num) == true) break;
 			else cout << "enter a valid location" << endl;
 		} 
-		cout << "Builder "<< c << ", where do you want to build a road? "<< endl;
-		while(true){
-			int num = req_int();
-			if(road_initial(c, num) == true) break;
-			else cout << "enter a valid location" << endl;
-		} 
     }
     for (auto it = players.rbegin(); it != players.rend(); ++it) {
 		cout << "Builder "<< it->first << ", where do you want to build a basement? "<< endl;
 		while(true){
 			int num = req_int();
 			if(build_initial(it->first, num) == true) break;
-			else cout << "enter a valid location" << endl;
-		} 
-		cout << "Builder "<< it->first << ", where do you want to build a road? "<< endl;
-		while(true){
-			int num = req_int();
-			if(road_initial(it->first, num) == true) break;
 			else cout << "enter a valid location" << endl;
 		} 
     }
