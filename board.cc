@@ -99,17 +99,18 @@ string Board::board_save(){
 	string save;
 	int geese_location;
 	for (auto& T : tiles){
-		save += T.get_value() + " ";
 
 		if(T.have_geese() == true) geese_location=T.get_value();
 		Resource res = T.get_resource();
-		if(res == Resource::BRICK) save += 0 + " ";
-		else if(res == Resource::ENERGY) save += 1 + " ";
-		else if(res == Resource::GLASS) save += 2 + " ";
-		else if(res == Resource::HEAT) save += 3 + " ";
-		else if(res == Resource::WIFI) save += 4 + " ";
-		else if(res == Resource::PARK) save += 5 + " ";
+		if(res == Resource::BRICK) save += to_string(0) + " ";
+		else if(res == Resource::ENERGY) save += to_string(1) + " ";
+		else if(res == Resource::GLASS) save += to_string(2) + " ";
+		else if(res == Resource::HEAT) save += to_string(3) + " ";
+		else if(res == Resource::WIFI) save += to_string(4) + " ";
+		else if(res == Resource::PARK) save += to_string(5) + " ";
+
+		save += to_string(T.get_value()) + " ";
 	}
-	save += "\ngeese.location";
+	save += "\n" + to_string(geese_location);
 	return save;
 }
