@@ -218,3 +218,8 @@ string Player::save_player_data() {
 
 	return player_data;
 }
+
+bool Player::isWon(){
+	if (building_points >= 10) return true;
+	else return false;
+}

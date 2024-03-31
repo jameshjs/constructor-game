@@ -21,14 +21,17 @@ bool Game::build_building(Colour colour, int vertex) {
 	return true;
 }
 
-bool Game::build_road(Colour colour, int edge) {
-	if (not players.at(colour).can_build_r()) return false;
+bool Game::road_initial(Colour colour, int edge) {
 	if (not board.build_road(colour, edge)) return false;
 	players.at(colour).build_road(edge);
 	return true;
 }
 
-void Game::game_start() {
+bool Game::build_road(Colour colour, int edge) {
+	if (not players.at(colour).can_build_r()) return false;
+	if (not board.build_road(colour, edge)) return false;
+	players.at(colour).build_road(edge);
+	return true;
 }
 
 void Game::run() {
@@ -50,7 +53,32 @@ void Game::run() {
 	for (auto& [c, p] : players) p.print_resources(cout);
 }
 
-int Game::roll_dice() {}
+int Game::roll_dice() {
+	/*
+	int roll_num;
+	cout << "Do you want a loaded dice? (y/n)"<<endl;
+	string decision;
+	while(true){
+		if(cin >> decision){
+			if (decision == "y" or decision == "n"){
+				break;
+			}
+			else cout << "Please enter y or n"<<endl;
+		}
+		else{
+			cout << "Please enter a string"<<endl;
+		}
+	}
+	if (decision == "y"){
+		int favored_roll = req_loaded_roll();
+		int roll_num = 2;
+	}
+	else{
+		int roll_num = 2;
+	}
+	*/
+	return 8;
+}
 
 void Game::obtain_resource(int roll) {
 	for (auto& [c, p] : players) {
@@ -131,15 +159,127 @@ void Game::save(string filename) {
 	outputFile<<round_number<<endl;
 	for (auto& [c, p] : players) outputFile<<p.save_player_data()<<endl;
 	outputFile<<board.board_save()<<endl;
-	
 
 }
 
-void turn_start() {}
-void turn_middle() {}
+void Game::run_io() {
+	game_start();
+	while(true){
+		for (const auto& [c, p] : players) {
+			turn_start(c);
+			bool game_won = turn_middle(c);
+			if (game_won == true) break;
+		}
+		round_number++;
+	}
+}
 
-int Game::req_int() {
-	return 0;
+void Game::game_start() {
+	board.move_geese(16); // set geese to park
+
+	// place the building and roads	
+    for (const auto& [c, p] : players) {
+        cout << "Builder "<< c << ", where do you want to build a basement? "<< endl;
+		while(true){
+			int num = req_int();
+			if(build_initial(c, num) == true) break;
+			else cout << "enter a valid location" << endl;
+		} 
+		cout << "Builder "<< c << ", where do you want to build a road? "<< endl;
+		while(true){
+			int num = req_int();
+			if(road_initial(c, num) == true) break;
+			else cout << "enter a valid location" << endl;
+		} 
+    }
+    for (auto it = players.rbegin(); it != players.rend(); ++it) {
+		cout << "Builder "<< it->first << ", where do you want to build a basement? "<< endl;
+		while(true){
+			int num = req_int();
+			if(build_initial(it->first, num) == true) break;
+			else cout << "enter a valid location" << endl;
+		} 
+		cout << "Builder "<< it->first << ", where do you want to build a road? "<< endl;
+		while(true){
+			int num = req_int();
+			if(road_initial(it->first, num) == true) break;
+			else cout << "enter a valid location" << endl;
+		} 
+    }
+}
+
+void Game::turn_start(Colour colour) {
+	cout << "Builder : " << colour << "’s turn." <<endl;
+	players.at(colour).print_resources(cout);
+	int num = roll_dice();
+	if (num == 7){
+		geese();
+	}else{
+		obtain_resource(num);
+	}
+}
+
+bool Game::turn_middle(Colour colour) {
+	string command;
+	while(true){
+		cout << "Enter you command, type help to see list of commands: " << endl;
+		if(cin >> command){
+			if (command == "board") {
+				td.print(cout);
+			} else if (command == "status") {
+				for (auto& [c, p] : players) p.print_resources(cout);
+				for (auto& [c, p] : players) p.print_residences(cout);
+			} else if (command == "residences") {
+				players.at(colour).print_residences(cout);
+				if(players.at(colour).isWon() == true){
+					cout << "Won" << endl;
+					return true;
+				}
+			} else if (command == "build-road") {
+				int num = req_int();
+				build_road(colour, num);
+			} else if (command == "build-res") {
+				int num = req_int();
+				board.build_building(colour, num);
+			} else if (command == "improve") {
+				int num = req_int();
+				players.at(colour).improve(num);
+				if(players.at(colour).isWon() == true){
+					cout << "Won" << endl;
+					return true;
+				}
+			} else if (command == "trade") {
+				Colour trader = req_colour();
+				Resource give = req_resource();
+				Resource take = req_resource();
+				trade(trader, give, take);
+			} else if (command == "next") {
+				break;
+			} else if (command == "save") {
+				string filename = req_string();
+				save(filename);
+			} else if (command == "help") {
+				help();
+			} else{
+				cout << "Invalid command, please enter again." << endl;
+			}
+		} else{
+			cout << "Please enter a string." << endl;
+		}
+	}
+	return false;
+}
+
+int Game::req_loaded_roll() {
+	int roll;
+	cout << "Input a roll between 2 and 12:" << endl;
+	while (true) {
+        if (cin >> roll){
+			if (roll >=2 and roll <= 12) return roll;
+			else cout << "Invalid roll." << endl;
+		}
+     	else cout << "Please enter an integer." << endl;
+    }
 }
 
 int Game::req_int(){
@@ -150,18 +290,11 @@ int Game::req_int(){
     }
 }
 
-string Game::req_command(){
-	string comm;
+string Game::req_string(){
+	string word;
     while (true) {
-        if (cin >> comm){
-			if(comm=="board" or comm=="status" or comm=="residences" or comm=="build-road" 
-			 or comm=="buid-res" or comm=="improve" or comm=="trade" or comm=="next"
-			 or comm=="save" or comm=="help"){
-				return comm;
-			 }
-			else std::cout << "Invalid command, please enter again." << std::endl;
-		}
-     	else cout << "Please enter a string." << endl;
+        if (cin >> word) return word;
+     	else cout << "Please enter an string." << endl;
     }
 }
 

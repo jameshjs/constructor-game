@@ -52,6 +52,8 @@ public:
 	void lose_resource(Resource resource);
 
 	string save_player_data();// unimplemented 
+
+	bool isWon();
 };
 
 #endif
