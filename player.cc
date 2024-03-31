@@ -198,22 +198,22 @@ void Player::lose_resource(Resource resource) {
 string Player::save_player_data() {
 	string player_data = to_string(brick)+" "+to_string(energy)+" "+to_string(glass)+" "
 						+to_string(heat)+" "+to_string(wifi)+" r ";
-	for (auto [key, value] : roads) player_data += key + " ";
+	for (auto [key, value] : roads) player_data += to_string(key)  + " ";
 	player_data += "h ";
 
 	for (auto [key, value] : buildings){
 		if (buildings.at(key).getType() == BuildingType::Tower) 
-			player_data += key + " T ";
+			player_data += to_string(key)  + " T ";
 	}
 	
 	for (auto [key, value] : buildings){
 		if (buildings.at(key).getType() == BuildingType::House) 
-			player_data += key + " H ";
+			player_data += to_string(key) + " H ";
 	} 
 
 	for (auto [key, value] : buildings){
 		if (buildings.at(key).getType() == BuildingType::Basement)
-			player_data += key + " B ";
+			player_data += to_string(key)  + " B ";
 	} 
 
 	return player_data;
