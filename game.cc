@@ -68,7 +68,11 @@ bool Game::improve(Colour colour, int vertex) {
 	return true;
 }
 
-void help() {}
+void Game::help() {
+	cout<<"Valid commands:"<<endl<<"board"<<endl<<"status"<<endl<<"residences"<<endl<<"build-road <edge#>"<<endl;
+	cout<<"build-res <housing#>"<<endl<<"improve <housing#>"<<endl<<"trade <colour> <give> <take>"<<endl;
+	cout<<"next"<<endl<<"save <file>"<<endl<<"help"<<endl;
+}
 
 void Game::geese() {
 	for (auto& [c, p] : players) p.lost_to_geese();
@@ -121,13 +125,44 @@ void Game::trade(Colour c2, Resource r1, Resource r2) {//check resource availabi
 	}
 }
 
-void save() {}
+void Game::save(string filename) {
+    std::ofstream outputFile(filename);
+
+	outputFile<<round_number<<endl;
+	for (auto& [c, p] : players) outputFile<<p.save_player_data()<<endl;
+	outputFile<<board.board_save()<<endl;
+	
+
+}
 
 void turn_start() {}
 void turn_middle() {}
 
 int Game::req_int() {
 	return 0;
+}
+
+int Game::req_int(){
+	int number;
+    while (true) {
+        if (cin >> number) return number;
+     	else cout << "Please enter an integer." << endl;
+    }
+}
+
+string Game::req_command(){
+	string comm;
+    while (true) {
+        if (cin >> comm){
+			if(comm=="board" or comm=="status" or comm=="residences" or comm=="build-road" 
+			 or comm=="buid-res" or comm=="improve" or comm=="trade" or comm=="next"
+			 or comm=="save" or comm=="help"){
+				return comm;
+			 }
+			else std::cout << "Invalid command, please enter again." << std::endl;
+		}
+     	else cout << "Please enter a string." << endl;
+    }
 }
 
 Colour Game::req_colour() {
@@ -143,4 +178,20 @@ Colour Game::req_colour() {
 
 bool Game::req_bool() {
 	return true;
+}
+
+Resource Game::req_resource(){
+	string res;
+    while (true) {
+        if (cin >> res){
+			if(res == "brick") return Resource::BRICK;
+			else if(res == "energy") return Resource::ENERGY;
+			else if(res == "glass")return Resource::GLASS;
+			else if(res == "heat")return Resource::HEAT;
+			else if(res == "wifi")return Resource::WIFI;
+			else std::cout << "Invalid resource, please enter again." << std::endl;
+		} 
+     	else cout << "Please enter a string." << endl;
+    }
+	return Resource::BRICK;
 }

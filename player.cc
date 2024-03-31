@@ -195,4 +195,26 @@ void Player::lose_resource(Resource resource) {
 	if (resource == Resource::WIFI) --wifi;
 }
 
-void Player::save_player_data() {}
+string Player::save_player_data() {
+	string player_data = to_string(brick)+" "+to_string(energy)+" "+to_string(glass)+" "
+						+to_string(heat)+" "+to_string(wifi)+" r ";
+	for (auto [key, value] : roads) player_data += key + " ";
+	player_data += "h ";
+
+	for (auto [key, value] : buildings){
+		if (buildings.at(key).getType() == BuildingType::Tower) 
+			player_data += key + " T ";
+	}
+	
+	for (auto [key, value] : buildings){
+		if (buildings.at(key).getType() == BuildingType::House) 
+			player_data += key + " H ";
+	} 
+
+	for (auto [key, value] : buildings){
+		if (buildings.at(key).getType() == BuildingType::Basement)
+			player_data += key + " B ";
+	} 
+
+	return player_data;
+}

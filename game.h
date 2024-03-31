@@ -15,12 +15,13 @@ class Game {
 	TextDisplay td;
 	Colour current_player;
 	map<Colour, Player> players;
+	int round_number; // the current round #
 	
 	int req_int(); // get an int from user via cin, keep asking until you get an int // unimplemented
-	string req_command(); // unimplemented
-	Colour req_colour(); // unimplemented
-	Resource req_resource(); // unimplemented
-	bool req_bool(); // unimplemented
+	string req_command();
+	Colour req_colour();
+	Resource req_resource(); 
+	bool req_bool(); 
 
 	int roll_dice(); // unimplemented
 	void obtain_resource(int roll); 
@@ -28,10 +29,10 @@ class Game {
 	bool build_building(Colour colour, int vertex);
 	bool build_road(Colour colour, int edge); 
 	bool improve(Colour colour, int vertex); 
-	void help(); // unimplemented
+	void help();
 	void geese(); 
 	void trade(Colour c2, Resource r1, Resource r2); 
-	void save(); // unimplemented
+	void save(string filename);
 
 	void game_start(); // unimplemented
 	void turn_start(); // unimplemented

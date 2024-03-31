@@ -51,7 +51,7 @@ public:
 	void gain_resource(Resource resource, int num); // dice roll or trade or steal
 	void lose_resource(Resource resource);
 
-	void save_player_data();// unimplemented 
+	string save_player_data();// unimplemented 
 };
 
 #endif

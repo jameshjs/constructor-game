@@ -34,6 +34,7 @@ class Board {
 	void improve_building(int vertex); 
 	bool build_road(Colour colour, int edge);
 	bool move_geese(int tile);
+	string board_save();
 };
 
 

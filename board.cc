@@ -94,3 +94,22 @@ bool Board::move_geese(int tile) {
 void Board::improve_building(int vertex) {
 	vertices[vertex].improve();
 }
+
+string Board::board_save(){
+	string save;
+	int geese_location;
+	for (auto& T : tiles){
+		save += T.get_value() + " ";
+
+		if(T.have_geese() == true) geese_location=T.get_value();
+		Resource res = T.get_resource();
+		if(res == Resource::BRICK) save += 0 + " ";
+		else if(res == Resource::ENERGY) save += 1 + " ";
+		else if(res == Resource::GLASS) save += 2 + " ";
+		else if(res == Resource::HEAT) save += 3 + " ";
+		else if(res == Resource::WIFI) save += 4 + " ";
+		else if(res == Resource::PARK) save += 5 + " ";
+	}
+	save += "\ngeese.location";
+	return save;
+}
