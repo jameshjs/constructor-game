@@ -170,7 +170,6 @@ void Game::run_io() {
 }
 
 void Game::game_start() {
-	board.move_geese(16); // set geese to park
 
 	// place the building and roads	
     for (const auto& [c, p] : players) {
