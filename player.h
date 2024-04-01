@@ -2,6 +2,7 @@
 #define __PLAYER_H__
 
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <map>
 #include <vector>
@@ -15,7 +16,6 @@ using namespace std;
 class Player {
 private:
 	Colour colour;
-	int building_points; // current number of building points
 	int brick; // number of bricks the player currently has
 	int energy; // number of energies the player currently has
 	int glass;
@@ -29,8 +29,12 @@ private:
 	bool can_improve_t() const;
 public:
 	Player(Colour colour);
+	Player(Colour colour, int brick, int energy, int glass, int heat, int wifi);
+
 	ostream& print_resources(ostream& out);
 	ostream& print_residences(ostream& out);
+	
+	int building_points() const;
 
 	Colour get_colour() const;
 	map<int, Building> get_buildings();
@@ -39,6 +43,7 @@ public:
 	
 	void add_building(int index); // add to vector
 	void add_road(int index); // add to vector
+	void add_improve(int index);
 	void build_building(int index); // add to vector and deduct cost
 	void build_road(int index); // add to vector and deduct cost
 	void improve(int index); 

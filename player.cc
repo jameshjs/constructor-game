@@ -1,13 +1,15 @@
 #include "player.h"
 
-Player::Player(Colour colour) : colour{colour}, building_points{0}, brick{0}, energy{0}, glass{0}, heat{0}, wifi{0} {}
+Player::Player(Colour colour) : colour{colour}, brick{0}, energy{0}, glass{0}, heat{0}, wifi{0} {}
+Player::Player(Colour colour, int brick, int energy, int glass, int heat, int wifi) :
+	colour{colour}, brick{brick}, energy{energy}, glass{glass}, heat{heat}, wifi{wifi} {}
 
 int Player::resource_total() const {
 	return brick + energy + glass + heat + wifi;
 }
 
 ostream& Player::print_resources(ostream& out) {
-	out << colour << " has " << building_points << " building points, " << 
+	out << colour << " has " << building_points() << " building points, " << 
 		brick << " brick, " <<
 		energy << " energy, " <<
 		glass << " glass, " <<
@@ -20,6 +22,16 @@ ostream& Player::print_residences(ostream& out) {
 	out << colour << " has built:" << endl;
 	for (auto [key, value] : buildings) out << key << " " << value.getType() << endl;
 	return out;
+}
+
+int Player::building_points() const {
+	int tmp = 0;
+	for (auto [i, b] : buildings) {
+		if (b.getType() == BuildingType::Basement) tmp += 1;
+		if (b.getType() == BuildingType::House) tmp += 2;
+		if (b.getType() == BuildingType::Tower) tmp += 3;
+	}
+	return tmp;
 }
 
 Colour Player::get_colour() const {
@@ -41,7 +53,6 @@ map<int, Building> Player::get_buildings() {
 
 void Player::add_building(int index) {
 	buildings[index] = Building{colour};
-	++building_points;
 	return;
 }
 
@@ -55,7 +66,6 @@ void Player::build_building(int index) {
 	brick -= 1;
 	energy -= 1;
 	glass -= 1;
-	++building_points;
 	return;
 }
 
@@ -77,9 +87,12 @@ void Player::improve(int index) {
 		wifi -= 1;
 		heat -= 2;
 	}
-	++building_points;
 	buildings[index].improve();
 	return;
+}
+
+void Player::add_improve(int index) {
+	buildings[index].improve();
 }
 
 bool Player::can_build_b() const {
@@ -220,6 +233,6 @@ string Player::save_player_data() {
 }
 
 bool Player::isWon(){
-	if (building_points >= 10) return true;
-	else return false;
+	if (building_points() >= 10) return true;
+	return false;
 }

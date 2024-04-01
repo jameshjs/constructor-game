@@ -33,6 +33,7 @@ class Board {
 	bool build_building(Colour colour, int vertex);
 	void improve_building(int vertex); 
 	bool build_road(Colour colour, int edge);
+	void place_road(Colour colour, int edge);
 	bool move_geese(int tile);
 	string board_save();
 };

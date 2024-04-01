@@ -1,11 +1,48 @@
 #include "game.h"
 using namespace std;
 
-Game::Game() : board{ReadBoard().create()}, td{TextDisplay{&board}}, current_player{Colour::Blue}, round_number(0) {
+Game::Game(Board b) : board{b}, td{TextDisplay{&board}}, current_player{Colour::Blue}, start_of_game{true} {
 	players.insert(make_pair(Colour::Blue, Player(Colour::Blue)));
 	players.insert(make_pair(Colour::Red, Player(Colour::Red)));
 	players.insert(make_pair(Colour::Orange, Player(Colour::Orange)));
 	players.insert(make_pair(Colour::Yellow, Player(Colour::Yellow)));
+}
+
+Game::Game(Board b, string filename) : board{b}, td{TextDisplay{&board}}, start_of_game{false} {
+	ifstream ifs{filename};
+	string line;
+	getline(ifs, line);
+	current_player = colour_int(stoi(line));
+	for (int i=0; i<4; ++i) {
+		getline(ifs, line);
+		int r1, r2, r3, r4, r5;
+		istringstream iss{line};
+		iss >> r1 >> r2 >> r3 >> r4 >> r5;
+		players.insert(make_pair(colour_int(i), Player(colour_int(i), r1, r2, r3, r4, r5)));
+		string index, type;
+		while (iss >> index) {
+			if (index == "r") continue;
+			if (index == "h") break;
+			players.at(colour_int(i)).add_road(stoi(index));
+			board.place_road(colour_int(i), stoi(index));
+		}
+		while (iss >> index and iss >> type) {
+			players.at(colour_int(i)).add_building(stoi(index));
+			board.build_initial(colour_int(i), stoi(index));
+			if (type == "H") {
+				players.at(colour_int(i)).add_improve(stoi(index));
+				board.improve_building(stoi(index));	
+			} else if (type == "T") {
+				players.at(colour_int(i)).add_improve(stoi(index));
+				players.at(colour_int(i)).add_improve(stoi(index));
+				board.improve_building(stoi(index));
+				board.improve_building(stoi(index));
+			}
+		}
+	}
+	getline(ifs, line);
+	getline(ifs, line);
+	board.move_geese(stoi(line));
 }
 
 bool Game::build_initial(Colour colour, int vertex) {
@@ -143,23 +180,24 @@ void Game::trade(Colour c2, Resource r1, Resource r2) {//check resource availabi
 }
 
 void Game::save(string filename) {
-    std::ofstream outputFile(filename);
-
-	outputFile<<round_number<<endl;
+	std::ofstream outputFile(filename);
+	current_player++;
+	if (current_player == Colour::Blue) outputFile << "0" << endl;
+	if (current_player == Colour::Red) outputFile << "1" << endl;
+	if (current_player == Colour::Orange) outputFile << "2" << endl;
+	if (current_player == Colour::Yellow) outputFile << "3" << endl;
 	for (auto& [c, p] : players) outputFile<<p.save_player_data()<<endl;
 	outputFile<<board.board_save()<<endl;
-
 }
 
 void Game::run_io() {
-	game_start();
+	if (start_of_game) game_start();
 	while(true){
 		for (const auto& [c, p] : players) {
 			turn_start(c);
 			bool game_won = turn_middle(c);
 			if (game_won == true) break;
-			round_number++;
-			if (round_number == 4) round_number = 0;
+			current_player++;
 		}
 	}
 }
@@ -183,6 +221,7 @@ void Game::game_start() {
 			else cout << "enter a valid location" << endl;
 		} 
     }
+    start_of_game = false;
 }
 
 void Game::turn_start(Colour colour) {

@@ -9,6 +9,8 @@
 #include "random.h"
 #include <map>
 #include <set>
+#include <fstream>
+#include <sstream>
 #include <string>
 using namespace std;
 
@@ -17,7 +19,7 @@ class Game {
 	TextDisplay td;
 	Colour current_player;
 	map<Colour, Player> players;
-	int round_number; // the current round #
+	bool start_of_game;
 	bool dice_fair;
 	Random random;
 	
@@ -28,7 +30,7 @@ class Game {
 	bool req_bool(); 
 	int req_loaded_roll();
 
-	int roll_dice(); // unimplemented
+	int roll_dice(); 
 	void obtain_resource(int roll); 
 	bool build_initial(Colour colour, int vertex);
 	bool build_building(Colour colour, int vertex);
@@ -39,12 +41,13 @@ class Game {
 	void trade(Colour c2, Resource r1, Resource r2); 
 	void save(string filename);
 
-	void game_start(); // unimplemented
-	void turn_start(Colour colour); // unimplemented
+	void game_start(); 
+	void turn_start(Colour colour); 
 	bool turn_middle(Colour colour); // returns true if a player won
 
 	public:
-	Game();
+	Game(Board b);
+	Game(Board b, string filename);
 	void run();
 	void run_io();
 };

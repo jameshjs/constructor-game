@@ -19,3 +19,20 @@ ostream& operator<<(ostream& out, const Colour colour) {
 	}
 	return out;
 }
+
+Colour operator++(Colour& colour, int) {
+	switch(colour) {
+		case Colour::Blue : return Colour::Red;
+		case Colour::Red : return Colour::Orange;
+		case Colour::Orange : return Colour::Yellow;
+		case Colour::Yellow : return Colour::Blue;
+	}
+	return colour;
+}
+
+Colour colour_int(int i) {
+	if (i == 0) return Colour::Blue;
+	if (i == 1) return Colour::Red;
+	if (i == 2) return Colour::Orange;
+	return Colour::Yellow;
+}

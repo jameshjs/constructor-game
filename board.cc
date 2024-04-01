@@ -84,6 +84,10 @@ bool Board::build_road(Colour colour, int edge) {
 	return false;
 }
 
+void Board::place_road(Colour colour, int edge) {
+	edges[edge].place_road(colour);
+}
+
 bool Board::move_geese(int tile) {
 	if (tiles[tile].have_geese()) return false;
 	for (auto& T : tiles) T.set_geese(false);
