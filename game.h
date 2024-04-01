@@ -3,7 +3,6 @@
 
 #include "board.h"
 #include "player.h"
-#include "readboard.h"
 #include "textdisplay.h"
 #include "colour.h"
 #include "random.h"
