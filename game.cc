@@ -163,8 +163,9 @@ void Game::run_io() {
 			turn_start(c);
 			bool game_won = turn_middle(c);
 			if (game_won == true) break;
+			round_number++;
+			if (round_number == 4) round_number = 0;
 		}
-		round_number++;
 	}
 }
 
