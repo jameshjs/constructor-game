@@ -48,30 +48,25 @@ void Game::run() {
 }
 
 int Game::roll_dice() {
-	/*
-	int roll_num;
-	cout << "Do you want a loaded dice? (y/n)"<<endl;
 	string decision;
-	while(true){
-		if(cin >> decision){
-			if (decision == "y" or decision == "n"){
+	int roll_num;
+	while (true) {
+		cin >> decision;
+		if (decision == "load") dice_fair = false;
+		if (decision == "fair") dice_fair = true;
+		if (decision == "roll") {
+			if (not dice_fair) {
+				roll_num = req_int();
+				break;
+			} else {
+				int roll1 = random(1, 6);
+				int roll2 = random(1, 6);
+				roll_num = roll1 + roll2;
 				break;
 			}
-			else cout << "Please enter y or n"<<endl;
-		}
-		else{
-			cout << "Please enter a string"<<endl;
 		}
 	}
-	if (decision == "y"){
-		int favored_roll = req_loaded_roll();
-		int roll_num = 2;
-	}
-	else{
-		int roll_num = 2;
-	}
-	*/
-	return 8;
+	return roll_num;
 }
 
 void Game::obtain_resource(int roll) {
@@ -191,7 +186,7 @@ void Game::game_start() {
 }
 
 void Game::turn_start(Colour colour) {
-	cout << "Builder : " << colour << "’s turn." <<endl;
+	cout << "Builder " << colour << "’s turn." <<endl;
 	players.at(colour).print_resources(cout);
 	int num = roll_dice();
 	if (num == 7){

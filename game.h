@@ -6,6 +6,7 @@
 #include "readboard.h"
 #include "textdisplay.h"
 #include "colour.h"
+#include "random.h"
 #include <map>
 #include <set>
 #include <string>
@@ -17,6 +18,8 @@ class Game {
 	Colour current_player;
 	map<Colour, Player> players;
 	int round_number; // the current round #
+	bool dice_fair;
+	Random random;
 	
 	int req_int(); // get an int from user via cin, keep asking until you get an int // unimplemented
 	string req_string();
