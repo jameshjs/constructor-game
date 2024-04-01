@@ -1,7 +1,7 @@
 #include "game.h"
 using namespace std;
 
-Game::Game() : board{ReadBoard().create()}, td{TextDisplay{&board}}, current_player{Colour::Blue} {
+Game::Game() : board{ReadBoard().create()}, td{TextDisplay{&board}}, current_player{Colour::Blue}, round_number(0) {
 	players.insert(make_pair(Colour::Blue, Player(Colour::Blue)));
 	players.insert(make_pair(Colour::Red, Player(Colour::Red)));
 	players.insert(make_pair(Colour::Orange, Player(Colour::Orange)));
