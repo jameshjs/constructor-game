@@ -299,19 +299,41 @@ int Game::req_loaded_roll() {
 }
 
 int Game::req_int(){
-	int number;
-    while (true) {
-        if (cin >> number) return number;
-     	else cout << "Please enter an integer." << endl;
-    }
+        int number;
+        while (true) {
+                if (cin >> number) {
+                        if (number < 0 || number > 19) {  // MAX_TILE_NUMBER = 19
+                                cout << "Please enter a number in the valid range (0 to 19)." << endl;
+                        } else {
+                                return number;
+                        }
+                } else if (cin.eof()) {
+                        // Handle EOF
+                        cout << "EOF encountered. Exiting..." << endl;
+                        exit(0);
+                } else {
+                        cout << "Invalid input. Please enter an integer." << endl;
+                        cin.clear();  // Clear the error flag
+                        cin.ignore();  // Skip to the next line
+                }
+        }
 }
 
 string Game::req_string(){
-	string word;
-    while (true) {
-        if (cin >> word) return word;
-     	else cout << "Please enter an string." << endl;
-    }
+         string word;
+         while (true) {
+                if (cin >> word) {
+                        return word;
+                } else if (cin.eof()) {
+                        // Handle EOF
+                        cout << "EOF encountered. Exiting..." << endl;
+                        exit(0);
+                } else {
+                        cout << "Invalid input. Please enter a string." << endl;
+                        cin.clear();  // Clear the error flag
+                        cin.ignore();  // Skip to the next line
+                }
+         }
 }
 
 Colour Game::req_colour() {
