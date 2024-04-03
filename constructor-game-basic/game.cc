@@ -236,54 +236,60 @@ void Game::turn_start(Colour colour) {
 }
 
 bool Game::turn_middle(Colour colour) {
-	string command;
-	while(true){
-		cout << "Enter you command, type help to see list of commands: " << endl;
-		if(cin >> command){
-			if (command == "board") {
-				td.print(cout);
-			} else if (command == "status") {
-				for (auto& [c, p] : players) p.print_resources(cout);
-				for (auto& [c, p] : players) p.print_residences(cout);
-			} else if (command == "residences") {
-				players.at(colour).print_residences(cout);
-				if(players.at(colour).isWon() == true){
-					cout << "Won" << endl;
-					return true;
-				}
-			} else if (command == "build-road") {
-				int num = req_int();
-				build_road(colour, num);
-			} else if (command == "build-res") {
-				int num = req_int();
-				board.build_building(colour, num);
-			} else if (command == "improve") {
-				int num = req_int();
-				players.at(colour).improve(num);
-				if(players.at(colour).isWon() == true){
-					cout << "Won" << endl;
-					return true;
-				}
-			} else if (command == "trade") {
-				Colour trader = req_colour();
-				Resource give = req_resource();
-				Resource take = req_resource();
-				trade(trader, give, take);
-			} else if (command == "next") {
-				break;
-			} else if (command == "save") {
-				string filename = req_string();
-				save(filename);
-			} else if (command == "help") {
-				help();
-			} else{
-				cout << "Invalid command, please enter again." << endl;
-			}
-		} else{
-			cout << "Please enter a string." << endl;
-		}
-	}
-	return false;
+        string command;
+        while(true){
+                cout << "Enter you command, type help to see list of commands: " << endl;
+                if(cin >> command){
+                        if (command == "board") {
+                                td.print(cout);
+                        } else if (command == "status") {
+                                for (auto& [c, p] : players) p.print_resources(cout);
+                                for (auto& [c, p] : players) p.print_residences(cout);
+                        } else if (command == "residences") {
+                                players.at(colour).print_residences(cout);
+                                if(players.at(colour).isWon() == true){
+                                        cout << "Won" << endl;
+                                        return true;
+                                }
+                        } else if (command == "build-road") {
+                                int num = req_int();
+                                build_road(colour, num);
+                        } else if (command == "build-res") {
+                                int num = req_int();
+                                board.build_building(colour, num);
+                        } else if (command == "improve") {
+                                int num = req_int();
+                                players.at(colour).improve(num);
+                                if(players.at(colour).isWon() == true){
+                                        cout << "Won" << endl;
+                                        return true;
+                                }
+                        } else if (command == "trade") {
+                                Colour trader = req_colour();
+                                Resource give = req_resource();
+                                Resource take = req_resource();
+                                trade(trader, give, take);
+                        } else if (command == "next") {
+                                break;
+                        } else if (command == "save") {
+                                string filename = req_string();
+                                save(filename);
+                        } else if (command == "help") {
+                                help();
+                        } else{
+                                cout << "Invalid command, please enter again." << endl;
+                        }
+                } else if (cin.eof()) {
+                        // Handle EOF during a turn
+                        cout << "EOF encountered. Exiting..." << endl;
+                        exit(0);
+                } else{
+                        cout << "Invalid command. Please enter a string." << endl;
+                        cin.clear();
+                        cin.ignore();
+                }
+        }
+        return false; // Default return
 }
 
 int Game::req_loaded_roll() {
@@ -337,32 +343,61 @@ string Game::req_string(){
 }
 
 Colour Game::req_colour() {
-	string tmp;
-	while (cout << ">" and cin >> tmp) {
-		if (tmp == "Blue") return Colour::Blue;
-		if (tmp == "Orange") return Colour::Orange;
-		if (tmp == "Red") return Colour::Red;
-		if (tmp == "Yellow") return Colour::Yellow;
-	}
-	return Colour::Blue;
+        string tmp;
+        while (true) {
+                if (cin >> tmp) {
+                        if (tmp == "Blue") return Colour::Blue;
+                        if (tmp == "Orange") return Colour::Orange;
+                        if (tmp == "Red") return Colour::Red;
+                        if (tmp == "Yellow") return Colour::Yellow;
+                } else if (cin.eof()) {
+                        // Handle EOF
+                        cout << "EOF encountered. Exiting..." << endl;
+                        exit(0);
+                } else {
+                        cout << "Invalid input. Please enter a colour." << endl;
+                        cin.clear();  // Clear the error flag
+                        cin.ignore();  // Skip to the next line
+                }
+        }
 }
 
 bool Game::req_bool() {
-	return true;
+        string input;
+        while (true) {
+                if (cin >> input) {
+                        if (input == "yes" || input == "Yes" || input == "Y" || input == "y") return true;
+                        if (input == "no" || input == "No" || input == "N" || input == "n") return false;
+                } else if (cin.eof()) {
+                        cout << "EOF encountered. Exiting..." << endl;
+                        exit(0);  // Exit the program when EOF is encountered
+                } else {
+                        cout << "Invalid input. Please enter 'yes' or 'no'." << endl;
+                        cin.clear();
+                        cin.ignore();
+                }
+        }
 }
 
 Resource Game::req_resource(){
-	string res;
-    while (true) {
-        if (cin >> res){
-			if(res == "brick") return Resource::BRICK;
-			else if(res == "energy") return Resource::ENERGY;
-			else if(res == "glass")return Resource::GLASS;
-			else if(res == "heat")return Resource::HEAT;
-			else if(res == "wifi")return Resource::WIFI;
-			else std::cout << "Invalid resource, please enter again." << std::endl;
-		} 
-     	else cout << "Please enter a string." << endl;
-    }
-	return Resource::BRICK;
+        string res;
+        while (true) {
+                if (cin >> res){
+                        if(res == "brick") return Resource::BRICK;
+                        else if(res == "energy") return Resource::ENERGY;
+                        else if(res == "glass")return Resource::GLASS;
+                        else if(res == "heat")return Resource::HEAT;
+                        else if(res == "wifi")return Resource::WIFI;
+                }else if (cin.eof()) {
+                        // Handle EOF
+                        cout << "EOF encountered. Exiting..." << std::endl;
+                        exit(0);
+                } else {
+                        cout << "Invalid input. Please enter a valid resource." << endl;
+                        cin.clear();
+                        cin.ignore();
+                }
+        }
+        return Resource::BRICK; // default return
 }
+
