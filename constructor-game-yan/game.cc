@@ -280,55 +280,48 @@ void Game::turn_start() {
 	}
 }
 
-bool Game::turn_middle() {
-	string command;
-	while(true){
-		cout << "Enter your command, type help to see list of commands: " << endl;
-		if(cin >> command){
-			if (command == "board") {
-				td.print(cout);
-			} else if (command == "status") {
-				for (auto& [c, p] : players) p.print_resources(cout);
-				for (auto& [c, p] : players) p.print_residences(cout);
-			} else if (command == "residences") {
-				players.at(current_player).print_residences(cout);
-				if(players.at(current_player).isWon() == true){
-					cout << "Won" << endl;
-					return true;
-				}
-			} else if (command == "build-road") {
-				int num = req_int();
-				build_road(current_player, num);
-			} else if (command == "build-res") {
-				int num = req_int();
-				board.build_building(current_player, num);
-			} else if (command == "improve") {
-				int num = req_int();
-				players.at(current_player).improve(num);
-				if(players.at(current_player).isWon() == true){
-					cout << "Won" << endl;
-					return true;
-				}
-			} else if (command == "trade") {
-				Colour trader = req_colour();
-				Resource give = req_resource();
-				Resource take = req_resource();
-				trade(trader, give, take);
-			} else if (command == "next") {
-				break;
-			} else if (command == "save") {
-				string filename = req_string();
-				save(filename);
-			} else if (command == "help") {
-				help();
-			} else{
-				cout << "Invalid command, please enter again." << endl;
-			}
+void Game::turn_middle() {
+	string line;
+	while(getline(cin, line){
+		string command;
+		istringstream iss{command};
+		iss >> command;
+		if(players.at(current_player).isWon() == true){
+			cout << "Builder " << current_player << "has won!" << endl;
+			return;
+		}
+		if (command == "board") {
+			td.print(cout);
+		} else if (command == "status") {
+			for (auto& [c, p] : players) p.print_resources(cout);
+		} else if (command == "residences") {
+			players.at(current_player).print_residences(cout);
+		}
+		} else if (command == "build-road") {
+			iss >> command;
+			build_road(current_player, stoi(command));
+		} else if (command == "build-res") {
+			iss >> command;
+			board.build_building(current_player, stoi(command));
+		} else if (command == "improve") {
+			iss >> command;
+			players.at(current_player).improve(stoi(command));
+		} else if (command == "trade") {
+			Colour trader = req_colour();
+			Resource give = req_resource();
+			Resource take = req_resource();
+			trade(trader, give, take);
+		} else if (command == "next") {
+			break;
+		} else if (command == "save") {
+			string filename = req_string();
+			save(filename);
+		} else if (command == "help") {
+			help();
 		} else{
-			cout << "Please enter a string." << endl;
+			cout << "Invalid command." << endl;
 		}
 	}
-	return false;
 }
 
 int Game::req_loaded_roll() {
