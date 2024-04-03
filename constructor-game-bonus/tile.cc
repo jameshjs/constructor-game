@@ -34,7 +34,6 @@ bool Tile::have_geese() const {
 
 void Tile::set_geese(bool value) {
 	geese = value;
-	return;
 }
 
 int Tile::get_value() const {

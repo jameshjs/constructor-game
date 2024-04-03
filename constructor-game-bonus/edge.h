@@ -3,18 +3,9 @@
 
 #include <vector>
 #include <string>
+#include "road.h"
 #include "colour.h"
 using namespace std;
-
-class Road {
-	Colour colour;
-	
-	public:
-	Road();
-	Road(Colour colour);
-	string print() const;
-	Colour getColour() const;
-};
 
 // 72 instances
 class Edge {

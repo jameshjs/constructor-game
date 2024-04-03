@@ -5,6 +5,7 @@
 using namespace std;
 
 enum class Resource {BRICK, ENERGY, GLASS, HEAT, WIFI, PARK};
+
 Resource translateResource(int i);
 string print_resource(Resource res);
 

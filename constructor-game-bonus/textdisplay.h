@@ -1,6 +1,9 @@
 #ifndef __TEXTDISPLAY_H__
 #define __TEXTDISPLAY_H__
 #include "display.h"
+#include <fstream>
+#include <sstream>
+#include <string>
 #include <iostream>
 
 class TextDisplay : public Display {

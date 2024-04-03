@@ -5,7 +5,7 @@
 
 class Display {
 	public:
-		virtual std::ostream& print(ostream& out) = 0;
+	virtual std::ostream& print(ostream& out) = 0;
 };
 
 #endif

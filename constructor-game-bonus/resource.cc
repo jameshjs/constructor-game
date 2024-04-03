@@ -1,14 +1,11 @@
 #include "resource.h"
 
 Resource translateResource(int i) {
-	switch(i) {
-		case 0 : return Resource::BRICK;
-		case 1 : return Resource::ENERGY;
-		case 2 : return Resource::GLASS;
-		case 3 : return Resource::HEAT;
-		case 4 : return Resource::WIFI;
-		case 5 : return Resource::PARK;
-	}
+	if (i == 0) return Resource::BRICK;
+	if (i == 1) return Resource::ENERGY;
+	if (i == 2) return Resource::GLASS;
+	if (i == 3) return Resource::HEAT;
+	if (i == 4) return Resource::WIFI;
 	return Resource::PARK;
 }
 
@@ -18,5 +15,5 @@ string print_resource(Resource res){
 	if(res == Resource::GLASS) return "glass";
 	if(res == Resource::HEAT) return "heat";
 	if(res == Resource::WIFI) return "wifi";
-	return "";
+	return "park";
 }

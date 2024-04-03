@@ -1,33 +1,24 @@
 #include "colour.h"
 
 string td_colour(Colour colour) {
-	switch(colour) {
-		case Colour::Blue : return "B";
-		case Colour::Red : return "R";
-		case Colour::Orange : return "O";
-		case Colour::Yellow : return "Y";
-	}
+	if (colour == Colour::Blue) return "B";
+	if (colour == Colour::Red) return "R";
+	if (colour == Colour::Orange) return "O";
 	return "Y";
 }
 
 ostream& operator<<(ostream& out, const Colour colour) {
-	switch(colour) {
-		case Colour::Blue : return out << "Blue";
-		case Colour::Red : return out << "Red";
-		case Colour::Orange : return out << "Orange";
-		case Colour::Yellow : return out << "Yellow";
-	}
-	return out;
+	if (colour == Colour::Blue) return out << "Blue";
+	if (colour == Colour::Red) return out << "Red";
+	if (colour == Colour::Orange) return out << "Orange";
+	return out << "Yellow";
 }
 
 Colour operator++(Colour& colour, int) {
-	switch(colour) {
-		case Colour::Blue : return Colour::Red;
-		case Colour::Red : return Colour::Orange;
-		case Colour::Orange : return Colour::Yellow;
-		case Colour::Yellow : return Colour::Blue;
-	}
-	return colour;
+	if (colour == Colour::Blue) return Colour::Red;
+	if (colour == Colour::Red) return Colour::Orange;
+	if (colour == Colour::Orange) return Colour::Yellow;
+	return Colour::Blue;
 }
 
 Colour colour_int(int i) {

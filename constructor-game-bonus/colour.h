@@ -6,8 +6,8 @@
 using namespace std;
 
 enum class Colour {Blue, Red, Orange, Yellow};
+
 string td_colour(Colour colour);
-string print_colour(Colour colour);
 ostream& operator<<(ostream& out, const Colour colour);
 Colour operator++(Colour& colour, int);
 Colour colour_int(int i);
