@@ -6,8 +6,8 @@
 #include <string>
 #include <map>
 #include <vector>
-#include "vertex.h"
-#include "edge.h"
+#include "building.h"
+#include "road.h"
 #include "colour.h"
 #include "resource.h"
 #include "random.h"
@@ -34,14 +34,14 @@ public:
 	Player(Colour colour);
 	Player(Colour colour, int brick, int energy, int glass, int heat, int wifi);
 
-	ostream& print_resources(ostream& out);
-	ostream& print_residences(ostream& out);
+	ostream& print_resources(ostream& out) const;
+	ostream& print_residences(ostream& out) const;
 	
 	int building_points() const;
 
 	Colour get_colour() const;
-	map<int, Building> get_buildings();
-	map<int, Road> get_roads();
+	map<int, Building>& get_buildings();
+	map<int, Road>& get_roads();
 	int resource_total() const;
 	bool have_resource(Resource r) const;
 	
@@ -60,9 +60,9 @@ public:
 	void gain_resource(Resource resource, int num); // dice roll or trade or steal
 	void lose_resource(Resource resource);
 
-	string save_player_data();// unimplemented 
+	string save_player_data() const;
 
-	bool isWon();
+	bool isWon() const;
 	virtual int roll_dice();
 };
 

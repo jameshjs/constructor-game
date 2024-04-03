@@ -8,17 +8,17 @@ int Player::resource_total() const {
 	return brick + energy + glass + heat + wifi;
 }
 
-ostream& Player::print_resources(ostream& out) {
+ostream& Player::print_resources(ostream& out) const {
 	out << colour << " has " << building_points() << " building points, " << 
 		brick << " brick, " <<
 		energy << " energy, " <<
 		glass << " glass, " <<
 		heat << " heat, " <<
-		wifi << " WiFi." << endl;
+		wifi << " and WiFi." << endl;
 	return out;
 }
 
-ostream& Player::print_residences(ostream& out) {
+ostream& Player::print_residences(ostream& out) const {
 	out << colour << " has built:" << endl;
 	for (auto [key, value] : buildings) out << key << " " << value.getType() << endl;
 	return out;
@@ -47,37 +47,34 @@ bool Player::have_resource(Resource r) const {
 	return false;
 }
 
-map<int, Building> Player::get_buildings() {
+map<int, Building>& Player::get_buildings() {
 	return buildings;
 }
 
-map<int, Road> Player::get_roads() {
+map<int, Road>& Player::get_roads() {
 	return roads;
 }
 
 void Player::add_building(int index) {
 	buildings[index] = Building{colour};
-	return;
 }
 
 void Player::add_road(int index) {
 	roads[index] = Road{colour};
-	return;
 }
 
 void Player::build_building(int index) {
-	buildings[index] = Building{colour};
+	add_building(index);
 	brick -= 1;
 	energy -= 1;
 	glass -= 1;
-	return;
+	wifi -= 1;
 }
 
 void Player::build_road(int index) {
 	heat -= 1;
 	wifi -= 1;
-	roads[index] = Road{colour};
-	return;
+	add_road(index);
 }
 
 void Player::improve(int index) {
@@ -91,8 +88,7 @@ void Player::improve(int index) {
 		wifi -= 1;
 		heat -= 2;
 	}
-	buildings[index].improve();
-	return;
+	add_improve(index);
 }
 
 void Player::add_improve(int index) {
@@ -103,6 +99,7 @@ bool Player::can_build_b() const {
 	if (brick < 1) return false;
 	if (energy < 1) return false;
 	if (glass < 1) return false;
+	if (wifi < 1) return false;
 	return true;
 }
 
@@ -160,8 +157,6 @@ void Player::lost_to_geese() {
 		} else if (r <= wifi + heat + glass + energy + brick) {
 			lose_resource(Resource::WIFI);
 			++wifi_lost;
-		} else {
-			cerr << "GEESE LOST RNG IS NOT HAPPY" << endl;
 		}
 		++lost;
 	}
@@ -188,11 +183,9 @@ Resource Player::stolen() {
 	} else if (r <= heat + glass + energy + brick) {
 		lose_resource(Resource::HEAT);
 		return Resource::HEAT;
-	} else if (r <= wifi + heat + glass + energy + brick) {
+	} else {
 		lose_resource(Resource::WIFI);
 		return Resource::WIFI;
-	} else {
-		cerr << "GEESE LOST RNG IS NOT HAPPY" << endl;
 	}
 }
 
@@ -212,33 +205,29 @@ void Player::lose_resource(Resource resource) {
 	if (resource == Resource::WIFI) --wifi;
 }
 
-string Player::save_player_data() {
-	string player_data = to_string(brick)+" "+to_string(energy)+" "+to_string(glass)+" "
-						+to_string(heat)+" "+to_string(wifi)+" r ";
+string Player::save_player_data() const {
+	string player_data = to_string(brick) + " " + 
+		to_string(energy) + " " + 
+		to_string(glass) + " " + 
+		to_string(heat) + " "
+		+ to_string(wifi) + " ";
+
+	player_data += "r ";
 	for (auto [key, value] : roads) player_data += to_string(key)  + " ";
-	player_data += "h ";
-
-	for (auto [key, value] : buildings){
-		if (buildings.at(key).getType() == BuildingType::Tower) 
-			player_data += to_string(key)  + " T ";
-	}
 	
+	player_data += "h ";
 	for (auto [key, value] : buildings){
-		if (buildings.at(key).getType() == BuildingType::House) 
-			player_data += to_string(key) + " H ";
+		player_data += to_string(key) + " ";
+		if (buildings.at(key).getType() == BuildingType::Basement) player_data += "B ";
+		if (buildings.at(key).getType() == BuildingType::House) player_data += "H ";
+		if (buildings.at(key).getType() == BuildingType::Tower) player_data += "T ";
 	} 
-
-	for (auto [key, value] : buildings){
-		if (buildings.at(key).getType() == BuildingType::Basement)
-			player_data += to_string(key)  + " B ";
-	} 
-
 	return player_data;
 }
 
-bool Player::isWon(){
+bool Player::isWon() const {
 	if (building_points() >= 10) return true;
 	return false;
 }
 
-int Player::roll_dice(){}
+int Player::roll_dice() {return 7;}
