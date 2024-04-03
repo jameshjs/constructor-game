@@ -6,18 +6,20 @@
 #include "textdisplay.h"
 #include "colour.h"
 #include "random.h"
+#include "playertype.h"
 #include <map>
 #include <set>
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <memory>
 using namespace std;
 
 class Game {
 	Board board;
 	TextDisplay td;
 	Colour current_player;
-	map<Colour, Player> players;
+	map<Colour, std::unique_ptr<Player>> players;
 	bool start_of_game;
 	Random random;
 	
@@ -26,17 +28,14 @@ class Game {
 	Colour req_colour();
 	Resource req_resource(); 
 	bool req_bool(); 
-	int req_loaded_roll();
 
-	int roll_dice(Colour colour); 
 	void obtain_resource(int roll); 
 	bool build_initial(Colour colour, int vertex);
 	bool build_building(Colour colour, int vertex);
 	bool build_road(Colour colour, int edge); 
 	bool improve(Colour colour, int vertex); 
 	void help();
-	void geese(); 
-	void computer_geese();
+	void geese(Colour colour); 
 	void trade(Colour c2, Resource r1, Resource r2); 
 	void save(string filename);
 

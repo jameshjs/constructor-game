@@ -24,12 +24,13 @@ private:
 	map<int, Building> buildings;
 	map<int, Road> roads;
 	Random random;
-	bool computer;
-	bool fair_dice;
 	
 	bool can_improve_h() const;
 	bool can_improve_t() const;
 public:
+	friend class HumanPlayer;
+	friend class ComputerPlayer;
+
 	Player(Colour colour);
 	Player(Colour colour, int brick, int energy, int glass, int heat, int wifi);
 
@@ -63,10 +64,7 @@ public:
 	string save_player_data();// unimplemented 
 
 	bool isWon();
-	void set_computer(bool state);
-
-	bool get_fair_dice();
-	void set_fair_dice(bool state);
+	virtual int roll_dice();
 };
 
 #endif

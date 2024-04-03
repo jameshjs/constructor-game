@@ -1,8 +1,8 @@
 #include "player.h"
 
-Player::Player(Colour colour) : colour{colour}, brick{0}, energy{0}, glass{0}, heat{0}, wifi{0}, fair_dice(true) {}
+Player::Player(Colour colour) : colour{colour}, brick{0}, energy{0}, glass{0}, heat{0}, wifi{0} {}
 Player::Player(Colour colour, int brick, int energy, int glass, int heat, int wifi) :
-	colour{colour}, brick{brick}, energy{energy}, glass{glass}, heat{heat}, wifi{wifi}, fair_dice(true)  {}
+	colour{colour}, brick{brick}, energy{energy}, glass{glass}, heat{heat}, wifi{wifi}  {}
 
 int Player::resource_total() const {
 	return brick + energy + glass + heat + wifi;
@@ -241,18 +241,4 @@ bool Player::isWon(){
 	return false;
 }
 
-bool Player::get_computer(){
-	return computer;
-}
-
-void Player::set_computer(bool state){
-	computer = state;
-	return;
-}
-
-bool Player::get_fair_dice(){
-	return fair_dice;
-}
-void Player::set_fair_dice(bool state){
-	fair_dice = state;
-}
+int Player::roll_dice(){}
