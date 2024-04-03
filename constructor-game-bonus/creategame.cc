@@ -18,6 +18,7 @@ Board CreateGame::create_board() {
 		ifstream ifs{filename};
 		for (int i=0; i<6; ++i) getline(ifs, input);
 	} else {
+		// randomly generate the board layout string as if it was read in
 		vector<string> tmp_r;
 		for (int i=0; i<3; ++i) tmp_r.push_back("4");
 		for (int i=0; i<3; ++i) tmp_r.push_back("3");
@@ -49,6 +50,8 @@ Board CreateGame::create_board() {
 		}
 		if (park == 0) input.append("5 7 ");
 	}
+
+	// load in tiles
 	vector<Tile> tiles;
 	istringstream ifs{input};
 	int resource_type;
@@ -63,6 +66,7 @@ Board CreateGame::create_board() {
 		++num;
 	}
 	
+	// load in edges	
 	vector<Edge> edges;
 	ifstream ifs_ee{"ee.txt"};
 	ifstream ifs_ev{"ev.txt"};
@@ -82,6 +86,7 @@ Board CreateGame::create_board() {
 		++num;
 	}
 	
+	// load in vertices
 	vector<Vertex> vertices;
 	ifstream ifs_vv{"vv.txt"};
 	ifstream ifs_vt{"vt.txt"};
