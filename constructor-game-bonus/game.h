@@ -42,13 +42,10 @@ class Game {
 	void game_start(); 
 	void turn_start(Colour colour); 
 	bool turn_middle(Colour colour); // returns true if a player won
-	void computer_turn_start(Colour colour);
-	bool computer_turn_middle(Colour colour);
 
 	public:
 	Game(Board b);
 	Game(Board b, string filename);
-	void run();
 	void run_io();
 };
 

@@ -40,7 +40,6 @@ public:
 	int building_points() const;
 
 	Colour get_colour() const;
-	bool get_computer();
 	map<int, Building> get_buildings();
 	map<int, Road> get_roads();
 	int resource_total() const;
