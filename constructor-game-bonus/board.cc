@@ -103,16 +103,8 @@ string Board::board_save(){
 	string save;
 	int geese_location;
 	for (auto& T : tiles){
-
-		if(T.have_geese() == true) geese_location=T.get_value();
-		Resource res = T.get_resource();
-		if(res == Resource::BRICK) save += to_string(0) + " ";
-		else if(res == Resource::ENERGY) save += to_string(1) + " ";
-		else if(res == Resource::GLASS) save += to_string(2) + " ";
-		else if(res == Resource::HEAT) save += to_string(3) + " ";
-		else if(res == Resource::WIFI) save += to_string(4) + " ";
-		else if(res == Resource::PARK) save += to_string(5) + " ";
-
+		if (T.have_geese() == true) geese_location = T.get_num();
+		save += sint_resource(T.get_resource()) + " ";
 		save += to_string(T.get_value()) + " ";
 	}
 	save += "\n" + to_string(geese_location);
@@ -120,13 +112,11 @@ string Board::board_save(){
 }
 
 int Board::random_vertex(){
-	int num = random(1, vertices.size());
-	return num;
+	return random(0, vertices.size()-1);
 }
 
 int Board::random_tile(){
-	int num = random(1, tiles.size());
-	return num;
+	return random(0, tiles.size()-1);
 }
 
 vector<int>& Board::get_neighbour_vertex(int edge) {

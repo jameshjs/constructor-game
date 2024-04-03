@@ -36,6 +36,10 @@ void Tile::set_geese(bool value) {
 	geese = value;
 }
 
+int Tile::get_num() const {
+	return tile_number;
+}
+
 int Tile::get_value() const {
 	return tile_value;
 }

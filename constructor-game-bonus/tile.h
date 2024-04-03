@@ -20,6 +20,7 @@ class Tile {
 	string print_geese() const;
 	bool have_geese() const;
 	void set_geese(bool value);
+	int get_num() const;
 	int get_value() const;
 	Resource get_resource() const;
 };
