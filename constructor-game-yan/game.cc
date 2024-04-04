@@ -89,31 +89,45 @@ int Game::roll_dice() {
 	int roll_num;
 	while (true) {
 		cout << ">";
-		cin >> decision;
+		if (!(cin >> decision)) {
+			cin.clear();
+			cin.ignore();
+			continue;
+		}
 		if (decision == "load") dice_fair.at(current_player) = false;
 		if (decision == "fair") dice_fair.at(current_player) = true;
 		if (decision == "roll") {
-			if (not dice_fair.at(current_player)) {
+			if (!dice_fair.at(current_player)) {
 				cout << "Input a roll between 2 and 12:" << endl;
 				while (true) {
+					string input;
+					cin >> input;
 					try {
-						roll_num = req_int();
-						if (roll_num >= 2 and roll_num <= 12) break;
+						roll_num = stoi(input);
+						if (roll_num >= 2 && roll_num <= 12) {
+							return roll_num;
+						} else {
+							cout << "Invalid roll." << endl;
+						}
+					} catch (const std::invalid_argument& e) {
 						cout << "Invalid roll." << endl;
-					} catch (std::logic_error const& ex) {
-						cout << "Invalid roll." << endl;
+					} catch (const std::out_of_range& e) {
+                                                cout << "Invalid roll." << endl;
+                                        }
+					cout << "Input a roll between 2 and 12:" << endl;
+					if (cin.fail()){
+						cin.clear();
+						cin.ignore();
 					}
 				}
-				break;
 			} else {
 				int roll1 = random(1, 6);
 				int roll2 = random(1, 6);
 				roll_num = roll1 + roll2;
-				break;
+				return roll_num;
 			}
 		}
 	}
-	return roll_num;
 }
 
 void Game::obtain_resource(int roll) {
