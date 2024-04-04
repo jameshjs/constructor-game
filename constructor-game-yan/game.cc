@@ -99,7 +99,10 @@ int Game::roll_dice() {
 					try {
 						roll_num = req_int();
 						if (roll_num >= 2 and roll_num <= 12) break;
-					} catch (std::logic_error const& ex) {}
+						cout << "Invalid roll." << endl;
+					} catch (std::logic_error const& ex) {
+						cout << "Invalid roll." << endl;
+					}
 				}
 				break;
 			} else {
@@ -146,7 +149,10 @@ bool Game::improve(Colour colour, int vertex) {
 		cout << "You do not have enough resources." << endl;
 		return false;
 	}
-	board.improve_building(vertex);
+	if (not board.improve_building(vertex)) {
+		cout << "You cannot build here." << endl;
+		return false;
+	}
 	players.at(colour).improve(vertex);
 	return true;
 }
@@ -283,8 +289,7 @@ void Game::turn_start() {
 
 void Game::turn_middle() {
 	string command;
-	cout << ">";
-	while(cin >> command) {
+	while(cout << ">" and cin >> command) {
 		try {
 			if(players.at(current_player).isWon() == true){
 				cout << "Builder " << current_player << "has won!" << endl;
@@ -317,7 +322,6 @@ void Game::turn_middle() {
 				help();
 			} else{
 				throw std::logic_error("");
-				cout << ">";
 			}
 		}
 		catch (std::logic_error const& ex) {
@@ -341,8 +345,8 @@ bool Game::req_bool() {
 	string s;
 	cout << ">";
 	cin >> s;
-	if (s == "true") return true;
-	if (s == "false") return false;
+	if (s == "yes") return true;
+	if (s == "no") return false;
 	throw std::logic_error("");
 }
 

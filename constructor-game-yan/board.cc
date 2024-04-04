@@ -46,12 +46,14 @@ vector<int>& Board::get_neighbour_tiles(int vertex) {
 }
 
 bool Board::build_initial(Colour colour, int vertex) {
+	if (vertex < 0 or vertex >= static_cast<int>(vertices.size())) return false;
 	if (vertices[vertex].building_exist()) return false;
 	vertices[vertex].place_basement(colour);
 	return true;
 }
 
 bool Board::build_building(Colour colour, int vertex) {
+	if (vertex < 0 or vertex >= static_cast<int>(vertices.size())) return false;
 	if (vertices[vertex].building_exist()) return false;
 	for (int n_vertex : vertices[vertex].get_neighbour_vertices()) {
 		if (vertices[n_vertex].building_exist()) return false;
@@ -66,6 +68,7 @@ bool Board::build_building(Colour colour, int vertex) {
 }
 
 bool Board::build_road(Colour colour, int edge) {
+	if (edge < 0 or edge >= static_cast<int>(edges.size())) return false;
 	if (edges[edge].road_exist()) return false;
 	for (int n_vertex : edges[edge].get_neighbour_vertices()) {
 		if (vertices[n_vertex].building_exist() and (vertices[n_vertex].getBuilding().getColour() == colour)) {
@@ -89,14 +92,17 @@ void Board::place_road(Colour colour, int edge) {
 }
 
 bool Board::move_geese(int tile) {
+	if (tile < 0 or tile >= static_cast<int>(tiles.size())) return false;
 	if (tiles[tile].have_geese()) return false;
 	for (auto& T : tiles) T.set_geese(false);
 	tiles[tile].set_geese(true);
 	return true;
 }
 
-void Board::improve_building(int vertex) {
+bool Board::improve_building(int vertex) {
+	if (vertex < 0 or vertex >= static_cast<int>(vertices.size())) return false;
 	vertices[vertex].improve();
+	return true;
 }
 
 string Board::board_save(){
@@ -109,14 +115,6 @@ string Board::board_save(){
 	}
 	save += "\n" + to_string(geese_location);
 	return save;
-}
-
-int Board::random_vertex(){
-	return random(0, vertices.size()-1);
-}
-
-int Board::random_tile(){
-	return random(0, tiles.size()-1);
 }
 
 vector<int>& Board::get_neighbour_vertex(int edge) {

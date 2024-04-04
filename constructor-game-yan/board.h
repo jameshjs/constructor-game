@@ -33,14 +33,11 @@ class Board {
 	vector<int>& get_neighbour_tiles(int vertex);
 	bool build_initial(Colour colour, int vertex);
 	bool build_building(Colour colour, int vertex);
-	void improve_building(int vertex); 
+	bool improve_building(int vertex); 
 	bool build_road(Colour colour, int edge);
 	void place_road(Colour colour, int edge);
 	bool move_geese(int tile);
 	string board_save();
-
-	int random_vertex();
-	int random_tile();
 
 	vector<int>& get_neighbour_vertex(int edge);
 	vector<int>& get_neighbour_edge(int vertex);

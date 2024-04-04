@@ -45,7 +45,11 @@ int main(int argc, char* argv[]) {
 	}
 	
 	Game g = CreateGame{filename, type, seed}.create(); // Create game with processed arguments
-    	g.run_io(); // Run the game in interactive mode
-
+	cin.exceptions(ios::eofbit);
+	try {
+		g.run(); // Run the game in interactive mode
+	} catch (ios::failure&) {
+		g.save("backup.sv");
+	}
     	return 0;
 }
