@@ -94,10 +94,10 @@ int Game::roll_dice() {
 		if (decision == "roll") {
 			if (not dice_fair.at(current_player)) {
 				cout << "Input a roll between 2 and 12:" << endl;
-				roll_num = req_int();
-				while (roll_num < 2 or roll_num > 12) {
-					cout << "Invalid roll." << endl;
+				while (true) {
 					roll_num = req_int();
+					if (roll_num >= 2 and roll_num <= 12) break;
+					catch (std::logic_error const& ex) {}
 				}
 				break;
 			} else {
@@ -159,8 +159,11 @@ void Game::geese() {
 	for (auto& [c, p] : players) p.lost_to_geese();
 
 	cout << "Choose where to place the GEESE." << endl;
-	int tile = req_int();
-	while (not board.move_geese(tile)) tile = req_int();
+	while (true) {
+		int tile = req_int();
+		if (board.move_geese(tile)) break;
+		catch (std::logic_error const& ex) {}
+	}
 	
 	set<Colour> can_steal;
 	for (auto& [c, p] : players) {
@@ -185,8 +188,11 @@ void Game::geese() {
 	}
 	cout << "." << endl;
 	cout << "Choose a builder to steal from." << endl;
-	Colour steal_from = req_colour();
-	while (can_steal.count(steal_from) == 0) steal_from = req_colour();
+	while (true) {
+		Colour steal_from = req_colour();
+		if (can_steal.count(steal_from) > 0) break;
+		catch (std::logic_error const& ex) {}
+	}
 	Resource r = players.at(steal_from).stolen();
 	players.at(current_player).gain_resource(r, 1);
 	cout << "Builder " << current_player << " steals " << print_resource(r) << " from builder " << steal_from << "." << endl;
@@ -198,7 +204,12 @@ void Game::trade(Colour c2, Resource r1, Resource r2) {//check resource availabi
 	if (not players.at(c2).have_resource(r2)) return;
 	cout << current_player << " offers " << c2 << " one " << print_resource(r1) << " for one " << print_resource(r2) << "." << endl;
 	cout << "Does " << c2 << " accept this offer?" << endl;
-	if (req_bool()) {
+	while (true) {
+		bool agreed = req_bool();
+		break;
+		catch (std::logic_error const& ex) {}
+	}
+	if (agreed) {
 		players.at(current_player).gain_resource(r2, 1);
 		players.at(current_player).lose_resource(r1);
 		players.at(c2).gain_resource(r1, 1);
@@ -234,6 +245,7 @@ void Game::game_start() {
 		while(true){
 			int num = req_int();
 			if (build_initial(c, num)) break;
+			catch (std::logic_error const& ex) {}
 		} 
 	}
 	for (auto it = players.rbegin(); it != players.rend(); ++it) {
@@ -241,6 +253,7 @@ void Game::game_start() {
 		while(true){
 			int num = req_int();
 			if (build_initial(it->first, num)) break;
+			catch (std::logic_error const& ex) {}
 		} 
 	}
 	start_of_game = false;
@@ -262,38 +275,38 @@ void Game::turn_middle() {
 	string command;
 	while(cin >> command) {
 		try {
-		if(players.at(current_player).isWon() == true){
-			cout << "Builder " << current_player << "has won!" << endl;
-			return;
-		}
-		if (command == "board") {
-			td.print(cout);
-		} else if (command == "status") {
-			for (auto& [c, p] : players) p.print_resources(cout);
-		} else if (command == "residences") {
-			players.at(current_player).print_residences(cout);
-		} else if (command == "build-road") {
-			build_road(current_player, req_int());
-		} else if (command == "build-res") {
-			board.build_building(current_player, req_int());
-		} else if (command == "improve") {
-			players.at(current_player).improve(req_int());
-		} else if (command == "trade") {
-			Colour trader = req_colour();
-			Resource give = req_resource();
-			Resource take = req_resource();
-			trade(trader, give, take);
-		} else if (command == "next") {
-			break;
-		} else if (command == "save") {
-			string filename;
-			cin >> filename;
-			save(filename);
-		} else if (command == "help") {
-			help();
-		} else{
-			throw std::logic_error("");
-		}
+			if(players.at(current_player).isWon() == true){
+				cout << "Builder " << current_player << "has won!" << endl;
+				return;
+			}
+			if (command == "board") {
+				td.print(cout);
+			} else if (command == "status") {
+				for (auto& [c, p] : players) p.print_resources(cout);
+			} else if (command == "residences") {
+				players.at(current_player).print_residences(cout);
+			} else if (command == "build-road") {
+				build_road(current_player, req_int());
+			} else if (command == "build-res") {
+				board.build_building(current_player, req_int());
+			} else if (command == "improve") {
+				players.at(current_player).improve(req_int());
+			} else if (command == "trade") {
+				Colour trader = req_colour();
+				Resource give = req_resource();
+				Resource take = req_resource();
+				trade(trader, give, take);
+			} else if (command == "next") {
+				break;
+			} else if (command == "save") {
+				string filename;
+				cin >> filename;
+				save(filename);
+			} else if (command == "help") {
+				help();
+			} else{
+				throw std::logic_error("");
+			}
 		}
 		catch (std::logic_error const& ex) {
 			cout << "Invalid command." << endl;
