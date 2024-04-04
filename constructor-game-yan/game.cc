@@ -242,13 +242,22 @@ void Game::save(string filename) {
 	outputFile << board.board_save() << endl;
 }
 
-void Game::run() {
+bool Game::run() {
 	if (start_of_game) game_start();
 	while (true) {
 		turn_start();
-		turn_middle();
+		if (turn_middle()) break;
 		current_player++;
 	}
+	cout << "Would you like to play again?" << endl;
+	bool agreed;
+	while (true) {
+		try {
+			agreed = req_bool();
+			break;
+		} catch (std::logic_error const& ex) {}
+	}
+	return agreed;
 }
 
 void Game::game_start() {
@@ -287,13 +296,13 @@ void Game::turn_start() {
 	}
 }
 
-void Game::turn_middle() {
+bool Game::turn_middle() {
 	string command;
 	while(cout << ">" and cin >> command) {
 		try {
 			if(players.at(current_player).isWon() == true){
 				cout << "Builder " << current_player << "has won!" << endl;
-				return;
+				return true;
 			}
 			if (command == "board") {
 				td.print(cout);
@@ -328,6 +337,7 @@ void Game::turn_middle() {
 			cout << "Invalid command." << endl;
 		}
 	}
+	return false;
 }
 
 Colour Game::req_colour() {

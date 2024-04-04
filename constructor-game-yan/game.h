@@ -41,12 +41,12 @@ class Game {
 
 	void game_start(); 
 	void turn_start(); 
-	void turn_middle(); // returns true if a player won
+	bool turn_middle(); // returns true if a player won
 
 	public:
 	Game(Board b);
 	Game(Board b, string filename);
-	void run();
+	bool run(); // returns true if play again
 	void save(string filename);
 };
 
