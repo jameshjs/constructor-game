@@ -160,9 +160,10 @@ void Game::geese() {
 	for (auto& [c, p] : players) p.lost_to_geese();
 
 	cout << "Choose where to place the GEESE." << endl;
+	int tile;
 	while (true) {
 		try {
-			int tile = req_int();
+			tile = req_int();
 			if (board.move_geese(tile)) break;
 		} catch (std::logic_error const& ex) {}
 	}
@@ -190,9 +191,10 @@ void Game::geese() {
 	}
 	cout << "." << endl;
 	cout << "Choose a builder to steal from." << endl;
+	Colour steal_from;
 	while (true) {
 		try {
-			Colour steal_from = req_colour();
+			steal_from = req_colour();
 			if (can_steal.count(steal_from) > 0) break;
 		} catch (std::logic_error const& ex) {}
 	}
@@ -207,9 +209,10 @@ void Game::trade(Colour c2, Resource r1, Resource r2) {//check resource availabi
 	if (not players.at(c2).have_resource(r2)) return;
 	cout << current_player << " offers " << c2 << " one " << print_resource(r1) << " for one " << print_resource(r2) << "." << endl;
 	cout << "Does " << c2 << " accept this offer?" << endl;
+	bool agreed;
 	while (true) {
 		try {
-			bool agreed = req_bool();
+			agreed = req_bool();
 			break;
 		} catch (std::logic_error const& ex) {}
 	}
