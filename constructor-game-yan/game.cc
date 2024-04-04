@@ -95,9 +95,10 @@ int Game::roll_dice() {
 			if (not dice_fair.at(current_player)) {
 				cout << "Input a roll between 2 and 12:" << endl;
 				while (true) {
-					roll_num = req_int();
-					if (roll_num >= 2 and roll_num <= 12) break;
-					catch (std::logic_error const& ex) {}
+					try {
+						roll_num = req_int();
+						if (roll_num >= 2 and roll_num <= 12) break;
+					} catch (std::logic_error const& ex) {}
 				}
 				break;
 			} else {
@@ -160,9 +161,10 @@ void Game::geese() {
 
 	cout << "Choose where to place the GEESE." << endl;
 	while (true) {
-		int tile = req_int();
-		if (board.move_geese(tile)) break;
-		catch (std::logic_error const& ex) {}
+		try {
+			int tile = req_int();
+			if (board.move_geese(tile)) break;
+		} catch (std::logic_error const& ex) {}
 	}
 	
 	set<Colour> can_steal;
@@ -189,9 +191,10 @@ void Game::geese() {
 	cout << "." << endl;
 	cout << "Choose a builder to steal from." << endl;
 	while (true) {
-		Colour steal_from = req_colour();
-		if (can_steal.count(steal_from) > 0) break;
-		catch (std::logic_error const& ex) {}
+		try {
+			Colour steal_from = req_colour();
+			if (can_steal.count(steal_from) > 0) break;
+		} catch (std::logic_error const& ex) {}
 	}
 	Resource r = players.at(steal_from).stolen();
 	players.at(current_player).gain_resource(r, 1);
@@ -205,9 +208,10 @@ void Game::trade(Colour c2, Resource r1, Resource r2) {//check resource availabi
 	cout << current_player << " offers " << c2 << " one " << print_resource(r1) << " for one " << print_resource(r2) << "." << endl;
 	cout << "Does " << c2 << " accept this offer?" << endl;
 	while (true) {
-		bool agreed = req_bool();
-		break;
-		catch (std::logic_error const& ex) {}
+		try {
+			bool agreed = req_bool();
+			break;
+		} catch (std::logic_error const& ex) {}
 	}
 	if (agreed) {
 		players.at(current_player).gain_resource(r2, 1);
@@ -243,17 +247,19 @@ void Game::game_start() {
 	for (const auto& [c, p] : players) {
         	cout << "Builder "<< c << ", where do you want to build a basement?"<< endl;
 		while(true){
-			int num = req_int();
-			if (build_initial(c, num)) break;
-			catch (std::logic_error const& ex) {}
+			try {
+				int num = req_int();
+				if (build_initial(c, num)) break;
+			} catch (std::logic_error const& ex) {}
 		} 
 	}
 	for (auto it = players.rbegin(); it != players.rend(); ++it) {
 		cout << "Builder "<< it->first << ", where do you want to build a basement? "<< endl;
 		while(true){
-			int num = req_int();
-			if (build_initial(it->first, num)) break;
-			catch (std::logic_error const& ex) {}
+			try {
+				int num = req_int();
+				if (build_initial(it->first, num)) break;
+			} catch (std::logic_error const& ex) {}
 		} 
 	}
 	start_of_game = false;
