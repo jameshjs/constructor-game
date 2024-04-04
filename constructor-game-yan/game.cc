@@ -88,6 +88,7 @@ int Game::roll_dice() {
 	string decision;
 	int roll_num;
 	while (true) {
+		cout << ">";
 		cin >> decision;
 		if (decision == "load") dice_fair.at(current_player) = false;
 		if (decision == "fair") dice_fair.at(current_player) = true;
@@ -282,6 +283,7 @@ void Game::turn_start() {
 
 void Game::turn_middle() {
 	string command;
+	cout << ">";
 	while(cin >> command) {
 		try {
 			if(players.at(current_player).isWon() == true){
@@ -315,6 +317,7 @@ void Game::turn_middle() {
 				help();
 			} else{
 				throw std::logic_error("");
+				cout << ">";
 			}
 		}
 		catch (std::logic_error const& ex) {
@@ -325,6 +328,7 @@ void Game::turn_middle() {
 
 Colour Game::req_colour() {
 	string s;
+	cout << ">";
 	cin >> s;
 	if (s == "Blue") return Colour::Blue;
 	if (s == "Orange") return Colour::Orange;
@@ -335,6 +339,7 @@ Colour Game::req_colour() {
 
 bool Game::req_bool() {
 	string s;
+	cout << ">";
 	cin >> s;
 	if (s == "true") return true;
 	if (s == "false") return false;
@@ -343,6 +348,7 @@ bool Game::req_bool() {
 
 Resource Game::req_resource() {
 	string s;
+	cout << ">";
 	cin >> s;
 	if (s == "brick") return Resource::BRICK;
 	else if (s == "energy") return Resource::ENERGY;
@@ -354,6 +360,7 @@ Resource Game::req_resource() {
 
 int Game::req_int() {
 	int number;
+	cout << ">";
 	if (cin >> number) return number;
 	cin.clear();  // Clear the error flag
 	cin.ignore();  // Skip to the next line
