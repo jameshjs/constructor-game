@@ -316,17 +316,17 @@ bool Game::req_bool() {
 	cin >> s;
 	if (s == "true") return true;
 	if (s == "false") return false;
-	throw throw std::logic_error("");
+	throw std::logic_error("");
 }
 
 Resource Game::req_resource() {
 	string s;
 	cin >> s;
-	if(s == "brick") return Resource::BRICK;
-	else if(s == "energy") return Resource::ENERGY;
-	else if(s == "glass")return Resource::GLASS;
-	else if(s == "heat")return Resource::HEAT;
-	else if(s == "wifi")return Resource::WIFI;
+	if (s == "brick") return Resource::BRICK;
+	else if (s == "energy") return Resource::ENERGY;
+	else if (s == "glass") return Resource::GLASS;
+	else if (s == "heat") return Resource::HEAT;
+	else if (s == "wifi") return Resource::WIFI;
 	else throw std::logic_error("");
 }
 

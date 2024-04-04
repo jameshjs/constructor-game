@@ -24,9 +24,8 @@ class Game {
 	Random random;
 	
 	int req_int();
-	Colour req_colour(string s);
+	Colour req_colour();
 	Resource req_resource(); 
-	Resource req_resource(string s);
 	bool req_bool(); 
 
 	int roll_dice(); 
