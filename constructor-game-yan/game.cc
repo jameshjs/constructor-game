@@ -84,25 +84,6 @@ bool Game::build_road(Colour colour, int edge) {
 	return true;
 }
 
-void Game::run() {
-	build_initial(Colour::Blue, 21);
-	build_initial(Colour::Orange, 6);
-	build_road(Colour::Orange, 6);
-	board.build_building(Colour::Yellow, 11);
-	build_road(Colour::Orange, 20);
-	build_road(Colour::Orange, 14);
-	board.move_geese(16);
-	obtain_resource(3);
-	obtain_resource(2);
-	players.at(Colour::Red).gain_resource(Resource::WIFI, 11);
-	players.at(Colour::Red).gain_resource(Resource::HEAT, 19);
-	geese();
-	trade(Colour::Red, Resource::BRICK, Resource::WIFI);
-	td.print(cout);
-	for (auto& [c, p] : players) p.print_residences(cout);
-	for (auto& [c, p] : players) p.print_resources(cout);
-}
-
 int Game::roll_dice() {
 	string decision;
 	int roll_num;
@@ -236,15 +217,12 @@ void Game::save(string filename) {
 	outputFile << board.board_save() << endl;
 }
 
-void Game::run_io() {
+void Game::run() {
 	if (start_of_game) game_start();
-	while(true){
-		for (const auto& [c, p] : players) {
-			turn_start();
-			bool game_won = turn_middle();
-			if (game_won == true) break;
-			current_player++;
-		}
+	while (true) {
+		turn_start();
+		turn_middle();
+		current_player++;
 	}
 }
 
@@ -266,10 +244,10 @@ void Game::game_start() {
 		} 
 	}
 	start_of_game = false;
-	td.print(cout);
 }
 
 void Game::turn_start() {
+	td.print(cout);
 	cout << "Builder " << current_player << "’s turn." <<endl;
 	players.at(current_player).print_resources(cout);
 	int num = roll_dice();
@@ -281,11 +259,9 @@ void Game::turn_start() {
 }
 
 void Game::turn_middle() {
-	string line;
-	while(getline(cin, line){
-		string command;
-		istringstream iss{command};
-		iss >> command;
+	string command;
+	while(cin >> command) {
+		try {
 		if(players.at(current_player).isWon() == true){
 			cout << "Builder " << current_player << "has won!" << endl;
 			return;
@@ -296,82 +272,42 @@ void Game::turn_middle() {
 			for (auto& [c, p] : players) p.print_resources(cout);
 		} else if (command == "residences") {
 			players.at(current_player).print_residences(cout);
-		}
 		} else if (command == "build-road") {
-			iss >> command;
-			build_road(current_player, stoi(command));
+			int i;
+			cin >> i;
+			if (cin.fail()) ;
+			build_road(current_player, i);
 		} else if (command == "build-res") {
-			iss >> command;
-			board.build_building(current_player, stoi(command));
+			int i;
+			cin >> i;
+			board.build_building(current_player, i);
 		} else if (command == "improve") {
-			iss >> command;
-			players.at(current_player).improve(stoi(command));
+			int i;
+			cin >> i;
+			players.at(current_player).improve(i);
 		} else if (command == "trade") {
-			Colour trader = req_colour();
-			Resource give = req_resource();
-			Resource take = req_resource();
+			string c, g, t;
+			cin >> c >> g >> t;
+			Colour trader = req_colour(c);
+			Resource give = req_resource(g);
+			Resource take = req_resource(t);
 			trade(trader, give, take);
 		} else if (command == "next") {
 			break;
 		} else if (command == "save") {
-			string filename = req_string();
+			string filename;
+			cin >> filename;
 			save(filename);
 		} else if (command == "help") {
 			help();
 		} else{
+			throw std::logic_error("");
+		}
+		}
+		catch (std::logic_error const& ex) {
 			cout << "Invalid command." << endl;
 		}
 	}
-}
-
-int Game::req_loaded_roll() {
-	int roll;
-	cout << "Input a roll between 2 and 12:" << endl;
-	while (true) {
-        if (cin >> roll){
-			if (roll >=2 and roll <= 12) return roll;
-			else cout << "Invalid roll." << endl;
-		}
-     	else cout << "Please enter an integer." << endl;
-    }
-}
-
-int Game::req_int(){
-        int number;
-        while (true) {
-                if (cin >> number) {
-                        if (number < 0 || number > 19) {  // MAX_TILE_NUMBER = 19
-                                cout << "Please enter a number in the valid range (0 to 19)." << endl;
-                        } else {
-                                return number;
-                        }
-                } else if (cin.eof()) {
-                        // Handle EOF
-                        cout << "EOF encountered. Exiting..." << endl;
-                        exit(0);
-                } else {
-                        cout << "Invalid input. Please enter an integer." << endl;
-                        cin.clear();  // Clear the error flag
-                        cin.ignore();  // Skip to the next line
-                }
-        }
-}
-
-string Game::req_string(){
-         string word;
-         while (true) {
-                if (cin >> word) {
-                        return word;
-                } else if (cin.eof()) {
-                        // Handle EOF
-                        cout << "EOF encountered. Exiting..." << endl;
-                        exit(0);
-                } else {
-                        cout << "Invalid input. Please enter a string." << endl;
-                        cin.clear();  // Clear the error flag
-                        cin.ignore();  // Skip to the next line
-                }
-         }
 }
 
 Colour Game::req_colour() {
@@ -383,6 +319,14 @@ Colour Game::req_colour() {
 		if (tmp == "Yellow") return Colour::Yellow;
 	}
 	return Colour::Blue;
+}
+
+Colour Game::req_colour(string s) {
+	if (s == "Blue") return Colour::Blue;
+	if (s == "Orange") return Colour::Orange;
+	if (s == "Red") return Colour::Red;
+	if (s == "Yellow") return Colour::Yellow;
+	else throw std::logic_error("");
 }
 
 bool Game::req_bool() {
@@ -403,4 +347,26 @@ Resource Game::req_resource(){
      	else cout << "Please enter a string." << endl;
     }
 	return Resource::BRICK;
+}
+
+Resource Game::req_resource(string s){
+	if(s == "brick") return Resource::BRICK;
+	else if(s == "energy") return Resource::ENERGY;
+	else if(s == "glass")return Resource::GLASS;
+	else if(s == "heat")return Resource::HEAT;
+	else if(s == "wifi")return Resource::WIFI;
+	else throw std::logic_error("");
+}
+
+int Game::req_int(){
+        int number;
+        while (true) {
+                if (cin >> number) {
+			return number;
+                } else {
+                        cin.clear();  // Clear the error flag
+                        cin.ignore();  // Skip to the next line
+                }
+        }
+	return number;
 }
