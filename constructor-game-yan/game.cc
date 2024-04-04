@@ -273,24 +273,15 @@ void Game::turn_middle() {
 		} else if (command == "residences") {
 			players.at(current_player).print_residences(cout);
 		} else if (command == "build-road") {
-			int i;
-			cin >> i;
-			if (cin.fail()) ;
-			build_road(current_player, i);
+			build_road(current_player, req_int());
 		} else if (command == "build-res") {
-			int i;
-			cin >> i;
-			board.build_building(current_player, i);
+			board.build_building(current_player, req_int());
 		} else if (command == "improve") {
-			int i;
-			cin >> i;
-			players.at(current_player).improve(i);
+			players.at(current_player).improve(req_int());
 		} else if (command == "trade") {
-			string c, g, t;
-			cin >> c >> g >> t;
-			Colour trader = req_colour(c);
-			Resource give = req_resource(g);
-			Resource take = req_resource(t);
+			Colour trader = req_colour();
+			Resource give = req_resource();
+			Resource take = req_resource();
 			trade(trader, give, take);
 		} else if (command == "next") {
 			break;
@@ -311,17 +302,8 @@ void Game::turn_middle() {
 }
 
 Colour Game::req_colour() {
-	string tmp;
-	while (cout << ">" and cin >> tmp) {
-		if (tmp == "Blue") return Colour::Blue;
-		if (tmp == "Orange") return Colour::Orange;
-		if (tmp == "Red") return Colour::Red;
-		if (tmp == "Yellow") return Colour::Yellow;
-	}
-	return Colour::Blue;
-}
-
-Colour Game::req_colour(string s) {
+	string s;
+	cin >> s;
 	if (s == "Blue") return Colour::Blue;
 	if (s == "Orange") return Colour::Orange;
 	if (s == "Red") return Colour::Red;
@@ -330,26 +312,16 @@ Colour Game::req_colour(string s) {
 }
 
 bool Game::req_bool() {
-	return true;
+	string s;
+	cin >> s;
+	if (s == "true") return true;
+	if (s == "false") return false;
+	throw throw std::logic_error("");
 }
 
-Resource Game::req_resource(){
-	string res;
-    while (true) {
-        if (cin >> res){
-			if(res == "brick") return Resource::BRICK;
-			else if(res == "energy") return Resource::ENERGY;
-			else if(res == "glass")return Resource::GLASS;
-			else if(res == "heat")return Resource::HEAT;
-			else if(res == "wifi")return Resource::WIFI;
-			else std::cout << "Invalid resource, please enter again." << std::endl;
-		} 
-     	else cout << "Please enter a string." << endl;
-    }
-	return Resource::BRICK;
-}
-
-Resource Game::req_resource(string s){
+Resource Game::req_resource() {
+	string s;
+	cin >> s;
 	if(s == "brick") return Resource::BRICK;
 	else if(s == "energy") return Resource::ENERGY;
 	else if(s == "glass")return Resource::GLASS;
@@ -358,15 +330,11 @@ Resource Game::req_resource(string s){
 	else throw std::logic_error("");
 }
 
-int Game::req_int(){
-        int number;
-        while (true) {
-                if (cin >> number) {
-			return number;
-                } else {
-                        cin.clear();  // Clear the error flag
-                        cin.ignore();  // Skip to the next line
-                }
-        }
+int Game::req_int() {
+	int number;
+	if (cin >> number) return number;
+	cin.clear();  // Clear the error flag
+	cin.ignore();  // Skip to the next line
+	throw std::logic_error("");
 	return number;
 }
