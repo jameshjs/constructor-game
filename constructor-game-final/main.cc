@@ -54,7 +54,6 @@ int main(int argc, char* argv[]) {
 		while (true) {
 			if (not g.run()) break;
 			g = CreateGame{"layout.txt", LoadType::Random, seed}.create();
-			g.enforce_td();
 		}
 	} catch (ios::failure&) {
 		cout << endl;
