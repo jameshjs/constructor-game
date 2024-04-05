@@ -280,7 +280,7 @@ bool Game::run() {
 }
 
 void Game::game_start() {
-
+	td.print(cout);
 	// place the building and roads	
 	for (const auto& [c, p] : players) {
         	cout << "Builder "<< c << ", where do you want to build a basement?"<< endl;
