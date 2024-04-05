@@ -25,11 +25,6 @@ int main(int argc, char* argv[]) {
             		if (i + 1 < argc) {
                 		filename = argv[++i];
                 		type = LoadType::Save;
-				ifstream ifs{filename}; // check if filename can be read
-				if (ifs.fail()) {
-					cerr << "File read error at: " << filename << endl;
-					return 1;
-				}
             		} else {
                 		cerr << "Filename expected after -load" << endl;
                 		return 1; // Exit if filename is not provided
@@ -47,6 +42,11 @@ int main(int argc, char* argv[]) {
             		cerr << "Unknown command-line argument: " << arg << endl;
             		return 1; // Exit on unrecognized argument
         	}
+	}
+	ifstream ifs{filename}; // check if filename can be read
+	if (ifs.fail()) {
+		cerr << "File read error at: " << filename << endl;
+		return 1;
 	}
 	Game g = CreateGame{filename, type, seed}.create(); // Create game with processed arguments
 	cin.exceptions(ios::eofbit);
