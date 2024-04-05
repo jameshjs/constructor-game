@@ -20,5 +20,5 @@ BuildingType Building::getType() const {return type;}
 
 void Building::improve() {
 	if (type == BuildingType::Basement) type = BuildingType::House;
-	if (type == BuildingType::House) type = BuildingType::Tower;
+	else if (type == BuildingType::House) type = BuildingType::Tower;
 }

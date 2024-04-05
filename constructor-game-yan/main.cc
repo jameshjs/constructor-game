@@ -1,6 +1,7 @@
 #include "creategame.h"
 #include <iostream>
 #include <ctime> // Include for time(nullptr)
+#include <fstream>
 #include <string>
 #include <cstdlib> // Include for std::atoi
 using namespace std;
@@ -24,17 +25,21 @@ int main(int argc, char* argv[]) {
             		if (i + 1 < argc) {
                 		filename = argv[++i];
                 		type = LoadType::Save;
+				ifstream ifs{filename}; // check if filename can be read
+				if (ifs.fail()) {
+					cerr << "File read error at: " << filename << endl;
+					return 1;
+				}
             		} else {
                 		cerr << "Filename expected after -load" << endl;
                 		return 1; // Exit if filename is not provided
             		}
         	} else if (arg == "-board") {
+			type = LoadType::Board;
             		if (i + 1 < argc) {
-                		filename = argv[++i];
-                		type = LoadType::Board;
+                		if (argv[i+1][0] != '-') filename = argv[++i];
             		} else {
-                		cerr << "Filename expected after -board" << endl;
-                		return 1; // Exit if filename is not provided
+				filename = "layout.txt";
             		}
         	} else if (arg == "-random-board") {
             	// Random board is the default, no additional action needed
@@ -43,15 +48,16 @@ int main(int argc, char* argv[]) {
             		return 1; // Exit on unrecognized argument
         	}
 	}
-	
 	Game g = CreateGame{filename, type, seed}.create(); // Create game with processed arguments
 	cin.exceptions(ios::eofbit);
 	try {
 		while (true) {
 			if (not g.run()) break;
-			g = CreateGame{"layout.txt", LoadType::Board, seed}.create();
+			g = CreateGame{"layout.txt", LoadType::Random, seed}.create();
+			g.enforce_td();
 		}
 	} catch (ios::failure&) {
+		cout << endl;
 		g.save("backup.sv");
 	}
     	return 0;

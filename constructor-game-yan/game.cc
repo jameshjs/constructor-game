@@ -232,6 +232,7 @@ void Game::trade(Colour c2, Resource r1, Resource r2) {//check resource availabi
 }
 
 void Game::save(string filename) {
+	if (start_of_game) return; // don't save the game if called during setup phase
 	std::ofstream outputFile(filename);
 	current_player++;
 	if (current_player == Colour::Blue) outputFile << "0" << endl;
@@ -300,9 +301,11 @@ bool Game::turn_middle() {
 	string command;
 	while(cout << ">" and cin >> command) {
 		try {
-			if(players.at(current_player).isWon() == true){
-				cout << "Builder " << current_player << "has won!" << endl;
-				return true;
+			for (auto [c, p] : players) {
+				if (p.isWon()) {
+					cout << "Builder " << c << " has won!" << endl;
+					return true;
+				}
 			}
 			if (command == "board") {
 				td.print(cout);
@@ -313,9 +316,9 @@ bool Game::turn_middle() {
 			} else if (command == "build-road") {
 				build_road(current_player, req_int());
 			} else if (command == "build-res") {
-				board.build_building(current_player, req_int());
+				build_building(current_player, req_int());
 			} else if (command == "improve") {
-				players.at(current_player).improve(req_int());
+				improve(current_player, req_int());
 			} else if (command == "trade") {
 				Colour trader = req_colour();
 				Resource give = req_resource();
@@ -380,4 +383,8 @@ int Game::req_int() {
 	cin.ignore(256, '\n');  // Skip to the next line
 	throw std::logic_error("");
 	return number;
+}
+
+void Game::enforce_td() {
+	td = &board;
 }
