@@ -377,7 +377,7 @@ int Game::req_int() {
 	cout << ">";
 	if (cin >> number) return number;
 	cin.clear();  // Clear the error flag
-	cin.ignore();  // Skip to the next line
+	cin.ignore(256, '\n');  // Skip to the next line
 	throw std::logic_error("");
 	return number;
 }
