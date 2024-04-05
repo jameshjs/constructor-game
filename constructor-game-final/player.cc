@@ -1,0 +1,240 @@
+#include "player.h"
+
+Player::Player(Colour colour) : colour{colour}, brick{0}, energy{0}, glass{0}, heat{0}, wifi{0} {}
+Player::Player(Colour colour, int brick, int energy, int glass, int heat, int wifi) :
+	colour{colour}, brick{brick}, energy{energy}, glass{glass}, heat{heat}, wifi{wifi}  {}
+
+int Player::resource_total() const {
+	return brick + energy + glass + heat + wifi;
+}
+
+ostream& Player::print_resources(ostream& out) const {
+	out << colour << " has " << building_points() << " building points, " << 
+		brick << " brick, " <<
+		energy << " energy, " <<
+		glass << " glass, " <<
+		heat << " heat, " <<
+		wifi << " and WiFi." << endl;
+	return out;
+}
+
+ostream& Player::print_residences(ostream& out) const {
+	out << colour << " has built:" << endl;
+	for (auto [key, value] : buildings) out << key << " " << value.getType() << endl;
+	return out;
+}
+
+int Player::building_points() const {
+	int tmp = 0;
+	for (auto [i, b] : buildings) {
+		if (b.getType() == BuildingType::Basement) tmp += 1;
+		if (b.getType() == BuildingType::House) tmp += 2;
+		if (b.getType() == BuildingType::Tower) tmp += 3;
+	}
+	return tmp;
+}
+
+Colour Player::get_colour() const {
+	return colour;
+}
+
+bool Player::have_resource(Resource r) const {
+	if (r == Resource::BRICK) return brick > 0;
+	if (r == Resource::ENERGY) return energy > 0;
+	if (r == Resource::GLASS) return glass > 0;
+	if (r == Resource::HEAT) return heat > 0;
+	if (r == Resource::WIFI) return wifi > 0;
+	return false;
+}
+
+map<int, Building>& Player::get_buildings() {
+	return buildings;
+}
+
+map<int, Road>& Player::get_roads() {
+	return roads;
+}
+
+void Player::add_building(int index) {
+	buildings[index] = Building{colour};
+}
+
+void Player::add_road(int index) {
+	roads[index] = Road{colour};
+}
+
+void Player::build_building(int index) {
+	add_building(index);
+	brick -= 1;
+	energy -= 1;
+	glass -= 1;
+	wifi -= 1;
+}
+
+void Player::build_road(int index) {
+	heat -= 1;
+	wifi -= 1;
+	add_road(index);
+}
+
+void Player::improve(int index) {
+	if (buildings[index].getType() == BuildingType::Basement) {
+		glass -= 2;
+		heat -= 3;
+	} else if (buildings[index].getType() == BuildingType::House) {
+		brick -= 3;
+		energy -= 2;
+		glass -= 2;
+		wifi -= 1;
+		heat -= 2;
+	}
+	add_improve(index);
+}
+
+void Player::add_improve(int index) {
+	buildings[index].improve();
+}
+
+bool Player::can_build_b() const {
+	if (brick < 1) return false;
+	if (energy < 1) return false;
+	if (glass < 1) return false;
+	if (wifi < 1) return false;
+	return true;
+}
+
+bool Player::can_build_r() const {
+	if (heat < 1) return false;
+	if (wifi < 1) return false;
+	return true;
+}
+
+bool Player::can_improve_h() const {
+	if (glass < 2) return false;
+	if (heat < 3) return false;
+	return true;
+}
+
+bool Player::can_improve_t() const {
+	if (brick < 3) return false;
+	if (energy < 2) return false;
+	if (glass < 2) return false;
+	if (wifi < 1) return false;
+	if (heat < 2) return false;
+	return true;
+}
+
+bool Player::can_improve(int index) const {
+	if (buildings.at(index).getType() == BuildingType::Basement) return can_improve_h();
+	if (buildings.at(index).getType() == BuildingType::House) return can_improve_t();
+	return false;
+}
+
+bool Player::own(int index) const {
+	if (buildings.count(index) == 0) return false;
+	return true;
+}
+
+bool Player::tower(int index) const {
+	if (buildings.at(index).getType() == BuildingType::Tower) return true;
+	return false;
+}
+
+void Player::lost_to_geese() {
+	if (resource_total() < 10) return;
+	int losses = resource_total() / 2;
+	int lost = 0;
+	int brick_lost = 0;
+	int energy_lost = 0;
+	int glass_lost = 0;
+	int heat_lost = 0;
+	int wifi_lost = 0;
+	while (lost != losses) {
+		int r = random(1, resource_total());
+		if (r <= brick) {
+			lose_resource(Resource::BRICK);
+			++brick_lost;
+		} else if (r <= energy + brick) {
+			lose_resource(Resource::ENERGY);
+			++energy_lost;
+		} else if (r <= glass + energy + brick) {
+			lose_resource(Resource::GLASS);
+			++glass_lost;
+		} else if (r <= heat + glass + energy + brick) {
+			lose_resource(Resource::HEAT);
+			++heat_lost;
+		} else if (r <= wifi + heat + glass + energy + brick) {
+			lose_resource(Resource::WIFI);
+			++wifi_lost;
+		}
+		++lost;
+	}
+
+	cout << "Builder " << colour << " loses " << losses << " resources to the geese. They lose:" << endl;
+	if (brick_lost > 0) cout << brick_lost << " Brick" << endl;
+	if (energy_lost > 0) cout << energy_lost << " Energy" << endl;
+	if (glass_lost > 0) cout << glass_lost << " Glass" << endl;
+	if (heat_lost > 0) cout << heat_lost << " Heat" << endl;
+	if (wifi_lost > 0) cout << wifi_lost << " WiFi" << endl;
+}
+
+Resource Player::stolen() {
+	int r = random(1, resource_total());
+	if (r <= brick) {
+		lose_resource(Resource::BRICK);
+		return Resource::BRICK;
+	} else if (r <= energy + brick) {
+		lose_resource(Resource::ENERGY);
+		return Resource::ENERGY;
+	} else if (r <= glass + energy + brick) {
+		lose_resource(Resource::GLASS);
+		return Resource::GLASS;
+	} else if (r <= heat + glass + energy + brick) {
+		lose_resource(Resource::HEAT);
+		return Resource::HEAT;
+	} else {
+		lose_resource(Resource::WIFI);
+		return Resource::WIFI;
+	}
+}
+
+void Player::gain_resource(Resource resource, int num) {
+	if (resource == Resource::BRICK) brick += num;
+	if (resource == Resource::ENERGY) energy += num;
+	if (resource == Resource::GLASS) glass += num;
+	if (resource == Resource::HEAT) heat += num;
+	if (resource == Resource::WIFI) wifi += num;
+}
+
+void Player::lose_resource(Resource resource) {
+	if (resource == Resource::BRICK) --brick;
+	if (resource == Resource::ENERGY) --energy;
+	if (resource == Resource::GLASS) --glass;
+	if (resource == Resource::HEAT) --heat;
+	if (resource == Resource::WIFI) --wifi;
+}
+
+string Player::save_player_data() const {
+	string player_data = to_string(brick) + " " + 
+		to_string(energy) + " " + 
+		to_string(glass) + " " + 
+		to_string(heat) + " "
+		+ to_string(wifi) + " ";
+
+	player_data += "r ";
+	for (auto [key, value] : roads) player_data += to_string(key)  + " ";
+	
+	player_data += "h ";
+	for (auto [key, value] : buildings){
+		player_data += to_string(key) + " ";
+		if (buildings.at(key).getType() == BuildingType::Basement) player_data += "B ";
+		if (buildings.at(key).getType() == BuildingType::House) player_data += "H ";
+		if (buildings.at(key).getType() == BuildingType::Tower) player_data += "T ";
+	} 
+	return player_data;
+}
+
+bool Player::isWon() const {
+	if (building_points() >= 10) return true;
+	return false;
+}

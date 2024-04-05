@@ -1,0 +1,41 @@
+s 26 vx 0 he 0 vx 1 
+s 26 ef 0 tf 0 ef 0  
+s 26 ve 1 tn 0 ve 2 
+s 26 ef 0 tr 0 ef 0 
+s 16 vx 2 he 3 vx 3 tv 0 vx 4 he 4 vx 5 
+s 16 ef 0 tf 0 ef 0 tg 0 ef 0 tf 0 ef 0 
+s 16 ve 5 tn 1 ve 6 tf 0 ve 7 tn 2 ve 8 
+s 16 ef 0 tr 1 ef 0 tf 0 ef 0 tr 2 ef 0 
+s 6 vx 6 he 9 vx 7 tv 1 vx 8 he 10 vx 9 tv 2 vx 10 he 11 vx 11 
+s 6 ef 0 tf 0 ef 0 tg 1 ef 0 tf 0 ef 0 tg 2 ef 0 tf 0 ef 0 
+s 6 ve 12 tn 3 ve 13 tf 0 ve 14 tn 4 ve 15 tf 0 ve 16 tn 5 ve 17 
+s 6 ef 0 tr 3 ef 0 tf 0 ef 0 tr 4 ef 0 tf 0 ef 0 tr 5 ef 0 
+s 6 vx 12 tv 3 vx 13 he 18 vx 14 tv 4 vx 15 he 19  vx 16 tv 5 vx 17 
+s 6 ef 0 tg 3 ef 0 tf 0 ef 0 tg 4 ef 0 tf 0 ef 0 tg 5 ef 0 
+s 6 ve 20 tf 0 ve 21 tn 6 ve 22 tf 0 ve 23 tn 7 ve 24 tf 0 ve 25 
+s 6 ef 0 tf 0 ef 0 tr 6 ef 0 tf 0 ef 0 tr 7 ef 0 tf 0 ef 0 
+s 6 vx 18 he 26 vx 19 tv 6 vx 20 he 27 vx 21 tv 7 vx 22 he 28 vx 23 
+s 6 ef 0 tf 0 ef 0 tg 6 ef 0 tf 0 ef 0 tg 7 ef 0 tf 0 ef 0 
+s 6 ve 29 tn 8 ve 30 tf 0 ve 31 tn 9 ve 32 tf 0 ve 33 tn 10 ve 34 
+s 6 ef 0 tr 8 ef 0 tf 0 ef 0 tr 9 ef 0 tf 0 ef 0 tr 10 ef 0 
+s 6 vx 24 tv 8 vx 25 he 35 vx 26 tv 9 vx 27 he 36  vx 28 tv 10 vx 29 
+s 6 ef 0 tg 8 ef 0 tf 0 ef 0 tg 9 ef 0 tf 0 ef 0 tg 10 ef 0 
+s 6 ve 37 tf 0 ve 38 tn 11 ve 39 tf 0 ve 40 tn 12 ve 41 tf 0 ve 42 
+s 6 ef 0 tf 0 ef 0 tr 11 ef 0 tf 0 ef 0 tr 12 ef 0 tf 0 ef 0 
+s 6 vx 30 he 43 vx 31 tv 11 vx 32 he 44 vx 33 tv 12 vx 34 he 45 vx 35 
+s 6 ef 0 tf 0 ef 0 tg 11 ef 0 tf 0 ef 0 tg 12 ef 0 tf 0 ef 0 
+s 6 ve 46 tn 13 ve 47 tf 0 ve 48 tn 14 ve 49 tf 0 ve 50 tn 15 ve 51 
+s 6 ef 0 tr 13 ef 0 tf 0 ef 0 tr 14 ef 0 tf 0 ef 0 tr 15 ef 0 
+s 6 vx 36 tv 13 vx 37 he 52 vx 38 tv 14 vx 39 he 53  vx 40 tv 15 vx 41 
+s 6 ef 0 tg 13 ef 0 tf 0 ef 0 tg 14 ef 0 tf 0 ef 0 tg 15 ef 0 
+s 6 ve 54 tf 0 ve 55 tn 16 ve 56 tf 0 ve 57 tn 17 ve 58 tf 0 ve 59 
+s 6 ef 0 tf 0 ef 0 tr 16 ef 0 tf 0 ef 0 tr 17 ef 0 tf 0 ef 0 
+s 6 vx 42 he 60 vx 43 tv 16 vx 44 he 61 vx 45 tv 17 vx 46 he 62 vx 47 
+s 16 ef 0 tg 16 ef 0 tf 0 ef 0 tg 17 ef 0 
+s 16 ve 63 tf 0 ve 64 tn 18 ve 65 tf 0 ve 66 
+s 16 ef 0 tf 0 ef 0 tr 18 ef 0 tf 0 ef 0 
+s 16 vx 48 he 67 vx 49 tv 18 vx 50 he 68 vx 51 
+s 26 ef 0 tg 18 ef 0  
+s 26 ve 69 tf 0 ve 70 
+s 26 ef 0 tf 0 ef 0  
+s 26 vx 52 he 71 vx 53 
