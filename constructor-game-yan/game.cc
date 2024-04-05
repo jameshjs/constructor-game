@@ -89,45 +89,31 @@ int Game::roll_dice() {
 	int roll_num;
 	while (true) {
 		cout << ">";
-		if (!(cin >> decision)) {
-			cin.clear();
-			cin.ignore();
-			continue;
-		}
+		cin >> decision;
 		if (decision == "load") dice_fair.at(current_player) = false;
 		if (decision == "fair") dice_fair.at(current_player) = true;
 		if (decision == "roll") {
-			if (!dice_fair.at(current_player)) {
+			if (not dice_fair.at(current_player)) {
 				cout << "Input a roll between 2 and 12:" << endl;
 				while (true) {
-					string input;
-					cin >> input;
 					try {
-						roll_num = stoi(input);
-						if (roll_num >= 2 && roll_num <= 12) {
-							return roll_num;
-						} else {
-							cout << "Invalid roll." << endl;
-						}
-					} catch (const std::invalid_argument& e) {
+						roll_num = req_int();
+						if (roll_num >= 2 and roll_num <= 12) break;
 						cout << "Invalid roll." << endl;
-					} catch (const std::out_of_range& e) {
-                                                cout << "Invalid roll." << endl;
-                                        }
-					cout << "Input a roll between 2 and 12:" << endl;
-					if (cin.fail()){
-						cin.clear();
-						cin.ignore();
+					} catch (std::logic_error const& ex) {
+						cout << "Invalid roll." << endl;
 					}
 				}
+				break;
 			} else {
 				int roll1 = random(1, 6);
 				int roll2 = random(1, 6);
 				roll_num = roll1 + roll2;
-				return roll_num;
+				break;
 			}
 		}
 	}
+	return roll_num;
 }
 
 void Game::obtain_resource(int roll) {
@@ -391,7 +377,7 @@ int Game::req_int() {
 	cout << ">";
 	if (cin >> number) return number;
 	cin.clear();  // Clear the error flag
-	cin.ignore();  // Skip to the next line
+	cin.ignore(256, '\n');  // Skip to the next line
 	throw std::logic_error("");
 	return number;
 }
