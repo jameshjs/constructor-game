@@ -16,7 +16,6 @@ class Board {
 	vector<Tile> tiles; // 19 tiles in the vector, one for each on the map
 	vector<Edge> edges; // 72 edges
 	vector<Vertex> vertices; // 54 vertices
-	Random random;
 	
 	public:
 	Board(vector<Tile> tiles, vector<Edge> edges, vector<Vertex> vertices);
