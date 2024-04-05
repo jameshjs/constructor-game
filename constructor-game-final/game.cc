@@ -261,6 +261,7 @@ void Game::save(string filename) {
 }
 
 bool Game::run() {
+	td = &board;
 	if (start_of_game) game_start();
 	while (true) {
 		turn_start();
@@ -400,8 +401,4 @@ int Game::req_int() {
 	cin.ignore(256, '\n');  // Skip to the next line
 	throw std::logic_error("");
 	return number;
-}
-
-void Game::enforce_td() {
-	td = &board;
 }
