@@ -46,7 +46,6 @@ class Game {
 	public:
 	Game(Board b);
 	Game(Board b, string filename);
-	void enforce_td();
 	bool run(); // returns true if play again
 	void save(string filename);
 };
